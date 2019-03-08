@@ -1,0 +1,10 @@
+{
+  "web_discovery": {
+      "id_seed_path": "./products_seed.txt",
+      "searx": {
+          "num_of_searx_result_pages": 5,
+          "path_to_save_web_discovery_output": "./searx_output",
+          "save_web_discovery_output": true
+      }
+  }
+}

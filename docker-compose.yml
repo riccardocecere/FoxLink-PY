@@ -1,0 +1,14 @@
+version: '3'
+services:
+  mongo:
+    image: mongo
+    environment:
+     MONGO_INITDB_ROOT_USERNAME: mongo
+     MONGO_INITDB_ROOT_PASSWORD: mongo
+  searx:
+    image: wonderfall/searx
+  web_discovery:
+    build: web_discovery
+    depends_on:
+      - searx
+
