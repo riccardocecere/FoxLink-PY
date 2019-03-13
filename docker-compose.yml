@@ -7,8 +7,15 @@ services:
      MONGO_INITDB_ROOT_PASSWORD: mongo
   searx:
     image: wonderfall/searx
+    ports:
+      - 8888:8888
   web_discovery:
     build: web_discovery
+    command: ["bash", "./wait-for-it.sh", "searx:8888", "--", "python", "main.py"]
+    #command: bash ./wait-for-it.sh searx:8888 -- echo "searx is up!"
     depends_on:
       - searx
+
+
+
 

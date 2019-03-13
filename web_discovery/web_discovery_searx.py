@@ -6,13 +6,19 @@ import searx
 # Input path to id file, spark context, number of pages for searx, boolean to save the file on hdfs,
 # path where to save files
 def web_discovery_with_searx(path,num_of_pages,save, path_to_save_sites):
-
+    output = open("results_searx.txt",'w+')
     #input = sc.textFile(path)
     seeds = open(path,'r')
     for seed in seeds:
         for i in range (num_of_pages):
-            print(searx.searx_request(seed,i))
-
+            #print(searx.searx_request(seed,i))
+            for key, value in searx.searx_request(seed,i).items():
+                #print(searx.searx_request(seed,i))
+                print(str(key))
+                #output.write(str(key)+" : "+ str(value)+"\n" % i)
+            #output.write("#####################################\n")
+            print("#################################")
+    output.close()
     # FlatMap 1 Function that returns all urls from the results of Searx from single id, for every url of an id it creates a line in format (id, url)
     # FlatMap 2 it takes each line with (id,response) and produce a couple (domain, (id,page))
     # the above pages are only the "last part" of the url, the one without the domain
