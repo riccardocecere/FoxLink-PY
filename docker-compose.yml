@@ -15,6 +15,8 @@ services:
     #command: bash ./wait-for-it.sh searx:8888 -- echo "searx is up!"
     depends_on:
       - searx
+  #classifier:
+  #  build: classifier
 
 
 
