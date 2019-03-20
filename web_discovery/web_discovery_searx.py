@@ -1,7 +1,3 @@
-#from web_discovery import searx
-#from general_utils import rdd_utils, text_parser
-import types
-
 import searx
 
 
@@ -18,7 +14,5 @@ def web_discovery_with_searx(path,num_of_pages):
                 results.append(result['url'])
 
         print('#####################')
-        print(results)
-        print(type(results))
     return results
 
