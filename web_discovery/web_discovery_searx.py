@@ -12,7 +12,5 @@ def web_discovery_with_searx(path,num_of_pages):
             list = output['results']
             for result in list:
                 results.append(result['url'])
-
-        print('#####################')
     return results
 

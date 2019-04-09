@@ -13,8 +13,8 @@ def searx_request(id,pageno):
         #response = requests.get(str(middleware_config.searx_address)+'/?format=json&pageno=' + str(pageno) + '&q=' + str(id))
         response = response.json()
         list = response['results']
-        for result in list:
-            print(result['url'])
+        #for result in list:
+            #print(result['url'])
         return response
 
     except:

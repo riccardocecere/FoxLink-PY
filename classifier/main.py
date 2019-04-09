@@ -1,9 +1,18 @@
+import kafka_interface
 from kafka import KafkaConsumer
+import os
+# ...
+KAFKA_BROKER_URL = os.environ.get('KAFKA_BROKER_URL')
+TOPIC_INPUT = os.environ.get('TOPIC_INPUT')
 
 
 print('Running Consumer')
-topic_name='DominiTrovati'
-consumer = KafkaConsumer(topic_name, auto_offset_reset='earliest',
-                             bootstrap_servers=['localhost:9092'], api_version=(0, 10), consumer_timeout_ms=1000)
-for msg in consumer:
-    print('message received')
+try:
+    consumer = kafka_interface.connect(TOPIC_INPUT, KAFKA_BROKER_URL)
+    print("Consumer connected")
+except Exception as ex:
+    print("ERROR: " + str(ex))
+try:
+    kafka_interface.consume(consumer)
+except Exception as ex:
+    print("ERROR: "+str(ex))
