@@ -1,5 +1,14 @@
 version: '3'
 services:
+  mongo:
+    image: mongo
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: mongo
+      MONGO_INITDB_ROOT_PASSWORD: mongo
+  searx:
+    image: wonderfall/searx
+    ports:
+      - 8888:8888
   zookeeper:
       image: wurstmeister/zookeeper
       expose:
@@ -21,4 +30,4 @@ services:
 networks:
   default:
     external:
-      name: kafka-network
+      name: environment-network

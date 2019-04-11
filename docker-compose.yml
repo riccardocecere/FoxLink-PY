@@ -1,19 +1,10 @@
 version: '3'
 services:
-  mongo:
-    image: mongo
-    environment:
-     MONGO_INITDB_ROOT_USERNAME: mongo
-     MONGO_INITDB_ROOT_PASSWORD: mongo
-  searx:
-    image: wonderfall/searx
-    ports:
-      - 8888:8888
   web_discovery:
     build: web_discovery
-    command: ["bash", "./wait-for-it.sh", "searx:8888", "--", "python", "main.py"]
-    depends_on:
-      - searx
+    #command: ["bash", "./wait-for-it.sh", "searx:8888", "--", "python", "main.py"]
+    #depends_on:
+    #  - searx
     environment:
       KAFKA_BROKER_URL: foxlink_kafka_1:9092
       TOPIC: DominiTrovati
@@ -24,10 +15,11 @@ services:
     environment:
       KAFKA_BROKER_URL: foxlink_kafka_1:9092
       TOPIC_INPUT: DominiTrovati
+      MESSAGES_PER_SECOND: 1000
 networks:
   default:
     external:
-      name: kafka-network
+      name: environment-network
 
 
 

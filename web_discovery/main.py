@@ -25,16 +25,23 @@ def main():
     print('Running producer')
     #message_producer=kafka.connect_kafka_producer()
     message_producer=kafka.connect(KAFKA_BROKER_URL)
-    topic_name="DominiTrovati"
-    i=1
-    for elem in sites_set:
+    i=0
+    #for elem in sites_set:
+    for j in range(0,4):
         try:
-            kafka.send_message(message_producer,topic_name,i,str(elem))
-            print("Message sent: "+str(i)+"-"+str(elem))
+            #kafka.send_message(message_producer,topic_name,i,str(elem))
+            kafka.send_message(message_producer,TOPIC,j,"BELLA")
+
+            #print("Message sent: "+str(i)+"-"+str(elem))
             sleep(SLEEP_TIME)
         except Exception as ex:
             print(ex)
         i+=1
+    try:
+        kafka.send_message(message_producer, TOPIC,i,"END MESSAGGE")
+        sleep(SLEEP_TIME)
+    except Exception as ex:
+        print(ex)
     print('Stop producer')
 
 if __name__ == "__main__":
