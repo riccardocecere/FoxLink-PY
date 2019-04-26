@@ -1,20 +1,28 @@
 version: '3'
 services:
   web_discovery:
-    build: web_discovery
+    build: ./web_discovery
     #command: ["bash", "./wait-for-it.sh", "searx:8888", "--", "python", "main.py"]
     #depends_on:
     #  - searx
     environment:
-      KAFKA_BROKER_URL: foxlink_kafka_1:9092
-      TOPIC: DominiTrovati
+      KAFKA_BROKER_URL: kafka:9092
+      OUTPUT_TOPIC: DominiTrovati
       MESSAGES_PER_SECOND: 1000
   classifier:
-    build: classifier
+    build: ./classifier
     #command: ["bash", "./wait-for-it.sh", "searx:8888", "--", "python", "main.py"]
     environment:
-      KAFKA_BROKER_URL: foxlink_kafka_1:9092
+      KAFKA_BROKER_URL: kafka:9092
       TOPIC_INPUT: DominiTrovati
+      TOPIC_OUTPUT: DominiClassificati
+      MESSAGES_PER_SECOND: 1000
+  crawler:
+    build: ./crawler
+    environment:
+      KAFKA_BROKER_URL: kafka:9092
+      TOPIC_INPUT: DominiClassificati
+      TOPIC_OUTPUT: DominiClassificati
       MESSAGES_PER_SECOND: 1000
 networks:
   default:

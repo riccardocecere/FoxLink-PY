@@ -7,6 +7,8 @@
     <orderEntry type="jdk" jdkName="Python 3.6 (Foxlink)" jdkType="Python SDK" />
     <orderEntry type="sourceFolder" forTests="false" />
     <orderEntry type="module" module-name="product-finder-master" />
+    <orderEntry type="module" module-name="kafkaProva" />
+    <orderEntry type="module" module-name="product-finder-master" />
   </component>
   <component name="TestRunnerService">
     <option name="PROJECT_TEST_RUNNER" value="Unittests" />

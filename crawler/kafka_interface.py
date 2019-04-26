@@ -43,7 +43,7 @@ def consume(consumer):
 def send_message(producer, topic_name, value):
     # produce json messages
     try:
-        future = producer.send(topic_name, value = value)
+        future = producer.send(topic = topic_name, value = value)
         result = future.get(timeout=60)
         print('Message sent successfully')
         print("Message sent: " + str(value))

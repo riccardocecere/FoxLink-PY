@@ -3,6 +3,8 @@
   <component name="ProjectModuleManager">
     <modules>
       <module fileurl="file://$PROJECT_DIR$/.idea/Foxlink.iml" filepath="$PROJECT_DIR$/.idea/Foxlink.iml" />
+      <module fileurl="file://$PROJECT_DIR$/../kafkaProva/.idea/kafkaProva.iml" filepath="$PROJECT_DIR$/../kafkaProva/.idea/kafkaProva.iml" />
+      <module fileurl="file://$USER_HOME$/Documents/University/Tesi Magistrale/vecchio sistema/product-finder-master/.idea/product-finder-master.iml" filepath="$USER_HOME$/Documents/University/Tesi Magistrale/vecchio sistema/product-finder-master/.idea/product-finder-master.iml" />
       <module fileurl="file://$USER_HOME$/Documents/University/Tesi Magistrale/product-finder-master/.idea/product-finder-master.iml" filepath="$USER_HOME$/Documents/University/Tesi Magistrale/product-finder-master/.idea/product-finder-master.iml" />
     </modules>
   </component>

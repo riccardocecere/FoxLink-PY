@@ -18,12 +18,6 @@ def main():
     except Exception as ex:
         print("Error connecting kafka broker as Consumer")
         print(ex)
-    try:
-        producer = kafka_interface.connectProducer(KAFKA_BROKER_URL)
-        print("Producer connected")
-    except Exception as ex:
-        print("Error connecting kafka broker as Producer")
-        print(ex)
 
     working = True
     while working:
@@ -32,10 +26,10 @@ def main():
         #print(message_dict)
         if (message_dict != {}):
             for topic, messages in message_dict.items():
+                print('Messages arrived from topic: ' + str(topic))
                 for message in messages:
                     print(message.value)
-                    kafka_interface.send_message(producer, TOPIC_OUTPUT, message.value)
-                    # print(transaction)  # DEBUG
+
 
 if __name__ == '__main__':
     main()
