@@ -17,6 +17,12 @@ services:
       TOPIC_INPUT: DominiTrovati
       TOPIC_OUTPUT: DominiClassificati
       MESSAGES_PER_SECOND: 1000
+      TRAINING_SET: 'data/training_set.csv'
+      TRAINING_PARQUET: 'data/training_set.parquet'
+      MODEL: 'classifier.sav'
+    volumes:
+      - ./classifier/data:/data
+      - ./classifier/model:/model
   crawler:
     build: ./crawler
     environment:

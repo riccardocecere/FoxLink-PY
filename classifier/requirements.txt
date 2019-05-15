@@ -1,1 +1,7 @@
 kafka-python
+sklearn
+pandas
+pattern
+requests
+bs4
+pyarrow

@@ -9,6 +9,7 @@
     <orderEntry type="module" module-name="product-finder-master" />
     <orderEntry type="module" module-name="kafkaProva" />
     <orderEntry type="module" module-name="product-finder-master" />
+    <orderEntry type="module" module-name="classifierProva" />
   </component>
   <component name="TestRunnerService">
     <option name="PROJECT_TEST_RUNNER" value="Unittests" />
