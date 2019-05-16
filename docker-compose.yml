@@ -2,27 +2,30 @@ version: '3'
 services:
   web_discovery:
     build: ./web_discovery
-    #command: ["bash", "./wait-for-it.sh", "searx:8888", "--", "python", "main.py"]
-    #depends_on:
-    #  - searx
     environment:
       KAFKA_BROKER_URL: kafka:9092
       OUTPUT_TOPIC: DominiTrovati
       MESSAGES_PER_SECOND: 1000
+      SEED: './data/products_seed.txt'
+      NUMBER_RESULT_PAGES: 3
+      SEARX_ADDRESS: 'http://searx:8888'
+    volumes:
+      - ./web_discovery/data:/data
+      - ./web_discovery/src:/src
   classifier:
     build: ./classifier
-    #command: ["bash", "./wait-for-it.sh", "searx:8888", "--", "python", "main.py"]
     environment:
       KAFKA_BROKER_URL: kafka:9092
       TOPIC_INPUT: DominiTrovati
       TOPIC_OUTPUT: DominiClassificati
       MESSAGES_PER_SECOND: 1000
-      TRAINING_SET: 'data/training_set.csv'
-      TRAINING_PARQUET: 'data/training_set.parquet'
-      MODEL: 'classifier.sav'
+      TRAINING_SET: './data/training_set.csv'
+      TRAINING_PARQUET: './data/training_set.snappy.parquet'
+      MODEL: './model/classifier.sav'
     volumes:
       - ./classifier/data:/data
       - ./classifier/model:/model
+      - ./classifier/src:/src
   crawler:
     build: ./crawler
     environment:
@@ -30,6 +33,9 @@ services:
       TOPIC_INPUT: DominiClassificati
       TOPIC_OUTPUT: DominiClassificati
       MESSAGES_PER_SECOND: 1000
+    volumes:
+      - ./crawler/data:/data
+      - ./crawler/src:/src
 networks:
   default:
     external:

@@ -1,7 +1,7 @@
-FROM python:latest
+FROM python:3.6
 ADD . /code
 WORKDIR /code
 ADD ./requirements.txt ./
-RUN pip install --upgrade pip
+#RUN pip install --upgrade pip
 RUN pip install -r requirements.txt
-CMD ["python", "main.py"]
+CMD ["python", "/src/main.py"]

@@ -13,23 +13,23 @@ SLEEP_TIME = 1 / MESSAGES_PER_SECOND
 def main():
     print('Running Consumer')
     try:
-        consumer = kafka_interface.connectConsumer(TOPIC_INPUT, KAFKA_BROKER_URL)
+        consumer = kafka_interface.connectConsumer(topic = TOPIC_INPUT, server = KAFKA_BROKER_URL)
         print("Consumer connected")
     except Exception as ex:
         print("Error connecting kafka broker as Consumer")
         print(ex)
-
+    i=0
     working = True
     while working:
-        message_dict = kafka_interface.consume(consumer)
+        message_dict = kafka_interface.consume(consumer = consumer)
         #message_dict = consumer.poll(timeout_ms=10, max_records = 5)
         #print(message_dict)
         if (message_dict != {}):
             for topic, messages in message_dict.items():
                 print('Messages arrived from topic: ' + str(topic))
                 for message in messages:
-                    print(message.value)
-
+                    print(str(i)+'  '+message.value)
+                    i+=1
 
 if __name__ == '__main__':
     main()

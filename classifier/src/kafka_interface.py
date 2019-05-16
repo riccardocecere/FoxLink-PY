@@ -40,13 +40,13 @@ def consume(consumer):
         print(str(ex))
     return messages_dict
 
-def send_message(producer, topic_name, value):
+def send_message(producer, topic, key, message):
     # produce json messages
     try:
-        future = producer.send(topic_name, value = value)
+        future = producer.send(topic, value = message)
         result = future.get(timeout=60)
         print('Message sent successfully')
-        print("Message sent: " + str(value))
+        print("Message sent: " + str(key) + str(message))
     except Exception as ex:
         print('Exception in publishing message')
         print(str(ex))

@@ -17,10 +17,10 @@ def connect(server):
         return producer
 
 
-def send_message(producer, topic_name, key, value):
+def send_message(producer, topic, key, value):
     # produce json messages
     try:
-        future = producer.send(topic = topic_name, key = key, value = value)
+        future = producer.send(topic = topic, key = key, value = value)
         result = future.get(timeout=60)
         print('Message sent successfully')
         print("Message sent: " + str(key) + "-" + str(value))
@@ -29,16 +29,16 @@ def send_message(producer, topic_name, key, value):
         print('Exception in publishing message')
         print(str(ex))
 
-def send_messages(producer, topic_name, SLEEP_TIME, message_set):
+def send_messages(producer, topic, pause, message_set):
     # produce json messages
     i=0
     for elem in message_set:
         try:
-            future = producer.send(topic_name, value = str(elem))
+            future = producer.send(topic, value = str(elem))
             result = future.get(timeout=60)
             print('Message sent successfully')
             print("Message sent: " + str(i) + "-" + str(elem))
-            sleep(SLEEP_TIME)
+            sleep(pause)
 
         except Exception as ex:
             print('Exception in publishing message')

@@ -11,29 +11,28 @@ import text_parser
 def prepare_training_set(dataset):
     column=[]
     for p in dataset['domain']:
-        column.append(text_parser.get_html_text(str(p)))
+        column.append(text_parser.get_html_text(url = str(p)))
     dataset['text']=column
 
 '''load the machine learning model from the path below, if it doesn't exists it create the model and train it'''
-def load_classifier(model_path, parquet_path, training_set_path):
+def load_classifier(model, parquet, training_set):
     #Check if the model already exists
     import os
-    exists = os.path.isfile(model_path)
+    exists = os.path.isfile(model)
     if not exists:
         print('Addestramento del modello....')
         #Check if the train parquet already exists
-        exists_parquet = os.path.isfile(parquet_path)
+        exists_parquet = os.path.isfile(parquet)
         if not exists_parquet:
             print('Creazioe del parquet')
             #Load train CSV
-            filename = '/data/training_set.csv'
-            dataframe = read_csv(filename, sep=';', names=['domain','category'])
+            dataframe = read_csv(training_set, sep=';', names=['domain','category'])
             #Convert CSV to dataframe
-            prepare_training_set(dataframe)
+            prepare_training_set(dataset = dataframe)
             #Convert Dataframe to parquet and save to path 'parquet_name'
-            dataframe.to_parquet(parquet_path, engine='auto', compression='snappy')
+            dataframe.to_parquet(parquet, engine='auto', compression='snappy')
         #load train parquet
-        dataset = read_parquet(parquet_path)
+        dataset = read_parquet(parquet)
 
         #Encoding of the 'category' column to a new column 'label'
         le = LabelEncoder()
@@ -53,10 +52,10 @@ def load_classifier(model_path, parquet_path, training_set_path):
         dataset['pred']=le.inverse_transform(dataset['label'])
         print('salvo il modello')
         #Save the model to path 'filename'
-        pickle.dump(nb, open(model_path, 'wb'))
+        pickle.dump(nb, open(model, 'wb'))
     #Load the model
     filename = '/model/classifier.sav'
-    loaded_model = pickle.load(open(model_path, 'rb'))
+    loaded_model = pickle.load(open(model, 'rb'))
 
     return loaded_model
 

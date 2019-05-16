@@ -17,34 +17,31 @@ MODEL = os.environ.get('MODEL')
 
 
 def main():
-    model = classifier.load_classifier(MODEL, TRAINING_PARQUET, TRAINING_SET)
-    print('Running Consumer')
+    print('Loading the model...')
+    model = classifier.load_classifier(model = MODEL, parquet = TRAINING_PARQUET, training_set = TRAINING_SET)
+    print('Running Consumer...')
     try:
-        consumer = kafka_interface.connectConsumer(TOPIC_INPUT, KAFKA_BROKER_URL)
+        consumer = kafka_interface.connectConsumer(topic = TOPIC_INPUT, server = KAFKA_BROKER_URL)
         print("Consumer connected")
     except Exception as ex:
         print("Error connecting kafka broker as Consumer")
         print(ex)
     try:
-        producer = kafka_interface.connectProducer(KAFKA_BROKER_URL)
+        producer = kafka_interface.connectProducer(server = KAFKA_BROKER_URL)
         print("Producer connected")
     except Exception as ex:
         print("Error connecting kafka broker as Producer")
         print(ex)
-
+    i=0
     working = True
     while working:
-        message_dict = kafka_interface.consume(consumer)
-        #message_dict = consumer.poll(timeout_ms=10, max_records = 5)
-        #print(message_dict)
+        message_dict = kafka_interface.consume(consumer = consumer)
         if (message_dict != {}):
             for topic, messages in message_dict.items():
                 for message in messages:
-                    if classifier.predict(model, message.value) == 1:
-                        print(message.value)
-                        kafka_interface.send_message(producer, TOPIC_OUTPUT, message.value)
-                    # print(transaction)  # DEBUG
-
+                    if classifier.predict(model = model, input = message.value) == 1:
+                        kafka_interface.send_message(producer = producer, key =i, topic = TOPIC_OUTPUT, message = message.value)
+                    i=i+1
 if __name__ == '__main__':
     main()
 

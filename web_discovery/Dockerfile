@@ -1,7 +1,6 @@
-FROM python:latest
+FROM python:3.6
 ADD . /code
 WORKDIR /code
+#RUN pip install --upgrade pip
 RUN pip install -r requirements.txt
-#COPY wait-for-it.sh wait-for-it.sh
-#RUN chmod +x wait-for-it.sh
-CMD ["python", "main.py"]
+CMD ["python", "/src/main.py"]
