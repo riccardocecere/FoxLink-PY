@@ -1,11 +1,12 @@
 import json
 import web_discovery_searx as searx
 import kafka_interface as kafka
+import text_parser
 from time import sleep
 import os
 
 KAFKA_BROKER_URL = os.environ.get('KAFKA_BROKER_URL')
-TOPIC = os.environ.get('OUTPUT_TOPIC')
+TOPIC = os.environ.get('TOPIC_OUTPUT')
 MESSAGES_PER_SECOND = float(os.environ.get('MESSAGES_PER_SECOND'))
 SLEEP_TIME = 1 / MESSAGES_PER_SECOND
 SEED = os.environ.get('SEED')
@@ -20,7 +21,7 @@ def main():
     '''delete eventual duplicates'''
     sites_set = set()
     for elem in sites:
-        sites_set.add(elem)
+        sites_set.add(text_parser.extract_domain_from_url(elem))
     print('Running producer')
 
     '''connect to the broker'''
@@ -31,14 +32,6 @@ def main():
 
     '''sending resulting sites to the next phase'''
     kafka.send_messages(producer = message_producer,topic = TOPIC, pause = SLEEP_TIME, message_set = sites_set)
-    # i=0
-    # for elem in sites_set:
-    #     try:
-    #         kafka.send_message(producer = message_producer,topic = TOPIC,key = i,value = str(elem))
-    #         sleep(SLEEP_TIME)
-    #     except Exception as ex:
-    #         print(ex)
-    #     i+=1
 
     print('Stop producer')
 

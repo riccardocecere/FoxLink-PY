@@ -9,7 +9,7 @@ def connectConsumer(topic, server):
         consumer = KafkaConsumer(
             topic,
             bootstrap_servers=server,
-            value_deserializer=lambda value: json.loads(value),
+            value_deserializer=lambda value: json.loads(value.decode('utf-8')),
             enable_auto_commit=False,
             auto_offset_reset='earliest'
         )
@@ -22,14 +22,13 @@ def connectConsumer(topic, server):
 def connectProducer(server):
     producer = None
     try:
-        producer = KafkaProducer(
-            bootstrap_servers=server,
-            # Encode all values as JSON
-            value_serializer=lambda value: json.dumps(value).encode('utf-8'))
-        return producer
+        producer = KafkaProducer(bootstrap_servers=server,
+                                 value_serializer=lambda value: json.dumps(value).encode())
     except Exception as ex:
         print('Exception while connecting Kafka broker')
         print(str(ex))
+    finally:
+        return producer
 
 def consume(consumer):
     # Consume messages
@@ -44,10 +43,10 @@ def consume(consumer):
 def send_message(producer, topic, value):
     # produce json messages
     try:
-        future = producer.send(topic, value = value)
+        future = producer.send(topic = topic, value = value)
         result = future.get(timeout=60)
         print('Message sent successfully')
-        #print("Message sent: " + str(value))
+        print("Message sent: " + str(value))
     except Exception as ex:
         print('Exception in publishing message')
         print(str(ex))

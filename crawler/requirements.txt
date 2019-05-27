@@ -1,1 +1,6 @@
 kafka-python
+pymongo
+scrapy
+bs4
+requests
+pattern

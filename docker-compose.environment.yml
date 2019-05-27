@@ -1,10 +1,13 @@
 version: '3'
 services:
   mongo:
-    image: mongo
+    image: mongo:latest
+    container_name: 'mongodb'
     environment:
       MONGO_INITDB_ROOT_USERNAME: mongo
       MONGO_INITDB_ROOT_PASSWORD: mongo
+    ports:
+      - 27017:27017
   searx:
     image: wonderfall/searx
     ports:
@@ -23,7 +26,7 @@ services:
       KAFKA_ZOOKEEPER_CONNECT: zookeeper:2181
       KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://kafka:9092
       KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
-      KAFKA_CREATE_TOPICS: "DominiTrovati:1:1,DominiClassificati:1:1:compact"
+      KAFKA_CREATE_TOPICS: "FoundDomains:1:1,ClassifiedDomains:1:1,ScrapedPages:1:1:compact"
 networks:
   default:
     external:

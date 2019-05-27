@@ -2,9 +2,10 @@ version: '3'
 services:
   web_discovery:
     build: ./web_discovery
+    container_name: 'web_discovery'
     environment:
       KAFKA_BROKER_URL: kafka:9092
-      OUTPUT_TOPIC: DominiTrovati
+      TOPIC_OUTPUT: FoundDomains
       MESSAGES_PER_SECOND: 1000
       SEED: './data/products_seed.txt'
       NUMBER_RESULT_PAGES: 3
@@ -12,12 +13,14 @@ services:
     volumes:
       - ./web_discovery/data:/data
       - ./web_discovery/src:/src
+
   classifier:
     build: ./classifier
+    container_name: 'classifier'
     environment:
       KAFKA_BROKER_URL: kafka:9092
-      TOPIC_INPUT: DominiTrovati
-      TOPIC_OUTPUT: DominiClassificati
+      TOPIC_INPUT: FoundDomains
+      TOPIC_OUTPUT: ClassifiedDomains
       MESSAGES_PER_SECOND: 1000
       TRAINING_SET: './data/training_set.csv'
       TRAINING_PARQUET: './data/training_set.snappy.parquet'
@@ -26,16 +29,34 @@ services:
       - ./classifier/data:/data
       - ./classifier/model:/model
       - ./classifier/src:/src
+
   crawler:
     build: ./crawler
+    container_name: 'crawler'
     environment:
       KAFKA_BROKER_URL: kafka:9092
-      TOPIC_INPUT: DominiClassificati
-      TOPIC_OUTPUT: DominiClassificati
+      TOPIC_INPUT: ClassifiedDomains
+      TOPIC_OUTPUT: ScrapedPages
       MESSAGES_PER_SECOND: 1000
+      DEPTH_LIMIT: 8
+      DOWLOAND_DELAY: 0.3
+      CLOSESPIDER_PAGECOUNT: 25
+      AUTOTHROTTLE_ENABLE: 'true'
+      AUTOTHROTTLE_TARGET_CONCURRENCY: 10
+      MONGODB_ADDRESS: "mongodb:27017"
     volumes:
       - ./crawler/data:/data
       - ./crawler/src:/src
+    external_links:
+      - mongo
+
+  shingler:
+    build: ./shingler
+    container_name: 'shingler'
+    environment:
+      KAFKA_BROKER_URL: kafka:9092
+      TOPIC_INPUT: ScrapedPages
+
 networks:
   default:
     external:
