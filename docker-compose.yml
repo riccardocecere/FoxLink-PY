@@ -21,6 +21,8 @@ services:
       KAFKA_BROKER_URL: kafka:9092
       TOPIC_INPUT: FoundDomains
       TOPIC_OUTPUT: ClassifiedDomains
+      TIMEOUT_POLLING: 10
+      MAX_RECORD_POLLING: 5
       MESSAGES_PER_SECOND: 1000
       TRAINING_SET: './data/training_set.csv'
       TRAINING_PARQUET: './data/training_set.snappy.parquet'
@@ -37,6 +39,8 @@ services:
       KAFKA_BROKER_URL: kafka:9092
       TOPIC_INPUT: ClassifiedDomains
       TOPIC_OUTPUT: ScrapedPages
+      TIMEOUT_POLLING: 10
+      MAX_RECORD_POLLING: 5
       MESSAGES_PER_SECOND: 1000
       DEPTH_LIMIT: 8
       DOWLOAND_DELAY: 0.3
@@ -45,6 +49,8 @@ services:
       AUTOTHROTTLE_TARGET_CONCURRENCY: 10
       MONGODB_ADDRESS: "mongodb:27017"
       DATABASE: 'ProductFinderCrawlerData'
+      TIMEOUT_CRAWLER: 180
+      TIMEOUT_DOWNLOAD: '5'
     volumes:
       - ./crawler/src:/src
     external_links:
@@ -56,6 +62,8 @@ services:
     environment:
       KAFKA_BROKER_URL: kafka:9092
       TOPIC_INPUT: ScrapedPages
+      TIMEOUT_POLLING: 10
+      MAX_RECORD_POLLING: 5
       SHINGLE_WINDOW: 3
     volumes:
       - ./shingler/src:/src

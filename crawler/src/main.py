@@ -16,6 +16,7 @@ download_delay = os.environ.get('DOWNLOAD_DELAY')
 closespider_pagecount = os.environ.get('CLOSESPIDER_PAGECOUNT')
 autothrottle_enable = os.environ.get('AUTOTHROTTLE_ENABLE')
 autothrottle_target_concurrency = os.environ.get('AUTOTHROTTLE_TARGET_CONCURRENCY')
+TIMEOUT_CRAWLER = int(os.environ.get('TIMEOUT_CRAWLER'))
 
 
 
@@ -45,33 +46,20 @@ def main():
                     urls.append(message.value)
                 try:
                     print('Starting new crawling process...')
-                    '''inizializing a new thread for crawl use to be stopped after n seconds'''
+                    '''inizializing a new thread for crawl use to be stopped after TIMEOUT_CRAWLER passes'''
                     p = multiprocessing.Process(target=foxlink_crawler.intrasite_crawling_iterative, name="Crawler",
-                                                args=(urls,
-                                                      depth_limit,
-                                                      download_delay,
-                                                      closespider_pagecount,
-                                                      autothrottle_enable,
-                                                      autothrottle_target_concurrency,
-                                                      producer, TOPIC_OUTPUT))
+                                                args=(urls,depth_limit,download_delay,
+                                                      closespider_pagecount,autothrottle_enable,
+                                                      autothrottle_target_concurrency))
                     p.start()
-
-                    # Wait 180 seconds for foo
-                    time.sleep(180)
-
-                    # Terminate foo
+                    # Wait n seconds for crawling
+                    time.sleep(TIMEOUT_CRAWLER)
+                    # Terminate crawling
                     p.terminate()
-
                     # Cleanup
                     p.join()
                     print('Join process')
-                    # foxlink_crawler.intrasite_crawling_iterative(urls,
-                    #                                              depth_limit,
-                    #                                              download_delay,
-                    #                                              closespider_pagecount,
-                    #                                              autothrottle_enable,
-                    #                                              autothrottle_target_concurrency,
-                    #                                              producer, TOPIC_OUTPUT)
+
                 except Exception as ex:
                     print(ex)
 

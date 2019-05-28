@@ -7,20 +7,21 @@ import crawler_utils,json,requests,foxlink_spider
 
 #Fucntion to start and perform intrasite crawling outside a spark context
 def intrasite_crawling_iterative(product_sites, depth_limit, download_delay, closesspider_pagecount,
-                                 autothrottle_enable, autothrottle_target_concurrency, producer, output_topic):
+                                 autothrottle_enable, autothrottle_target_concurrency):
 
     allowed_domains = []
     for site in product_sites:
         allowed_domain = str(text_parser.remove_www_domain(site))
         allowed_domains.append(allowed_domain)
-    foxlink_spider.start_crawling(product_sites, allowed_domains, depth_limit, download_delay, closesspider_pagecount, autothrottle_enable, autothrottle_target_concurrency)
+    foxlink_spider.start_crawling(product_sites, allowed_domains, depth_limit, download_delay, closesspider_pagecount,
+                                  autothrottle_enable, autothrottle_target_concurrency)
     print('Save Results....')
-    insert_home_pages(mongodb_interface.get_all_collections(), producer, output_topic)
+    insert_home_pages(mongodb_interface.get_all_collections())
     print('Finish crawling')
     return product_sites
 
 # Function to manage home pages in mongodb
-def insert_home_pages(collections, producer, output_topic):
+def insert_home_pages(collections):
     if collections == None or collections == '' or collections == []:
         return None
     for collection in collections:

@@ -7,9 +7,12 @@ from scrapy.crawler import CrawlerProcess
 from scrapy.utils.project import get_project_settings
 import text_parser
 from bs4 import BeautifulSoup
-import time
 import kafka_interface as kafka
-import multiprocessing
+import os
+
+TIMEOUT_DOWNLOAD = os.environ.get('TIMEOUT_DOWNLOAD')
+TOPIC_OUTPUT = os.environ.get('TOPIC_OUTPUT')
+KAFKA_ADDRESS = os.environ.get('KAFKA_BROKER_URL')
 
 
 # Definition of foxlink spider
@@ -42,8 +45,8 @@ class ProductFinderSpider(CrawlSpider):
             except Exception as ex:
                 print('Failed while saving')
             try:
-                producer = kafka.connectProducer(server = 'kafka:9092')
-                kafka.send_message(producer = producer, topic = 'ScrapedPages', value = content)
+                producer = kafka.connectProducer(server = KAFKA_ADDRESS)
+                kafka.send_message(producer = producer, topic = TOPIC_OUTPUT, value = content)
             except Exception as ex:
                 print(ex)
                 print('Problem to sent message')
@@ -73,7 +76,7 @@ def start_crawling(start_urls, allowed_domains,depth_limit,download_delay, close
         'LOG_LEVEL' : 'INFO',
         'COOKIES_ENABLED':'False',
         'RETRY_ENABLE':'False',
-        'DOWNLOAD_TIMEOUT':str(5),
+        'DOWNLOAD_TIMEOUT':TIMEOUT_DOWNLOAD,
         'REDIRECT_ENABLED':'False',
         'AJAXCRAWL_ENABLED':'True',
         'ROBOTSTXT_OBEY':'True',

@@ -1,7 +1,9 @@
 from kafka import KafkaConsumer, KafkaProducer
-from time import sleep
 import json
+import os
 
+TIMEOUT_POLLING = int(os.environ.get('TIMEOUT_POLLING'))
+MAX_RECORD_POLLING = int(os.environ.get('MAX_RECORD_POLLING'))
 
 def connectConsumer(topic, server):
     consumer = None
@@ -34,7 +36,7 @@ def consume(consumer):
     # Consume messages
     messages_dict = {}
     try:
-        messages_dict = consumer.poll(timeout_ms=10, max_records=5)
+        messages_dict = consumer.poll(timeout_ms=TIMEOUT_POLLING, max_records=MAX_RECORD_POLLING)
     except Exception as ex:
         print('Exception while polling from Kafka broker')
         print(str(ex))

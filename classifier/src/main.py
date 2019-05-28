@@ -1,7 +1,5 @@
 import kafka_interface
-from kafka import KafkaConsumer
 import os
-from time import sleep
 import classifier
 
 
