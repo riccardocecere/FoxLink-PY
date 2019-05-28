@@ -3,9 +3,10 @@ from pymongo import MongoClient
 
 # Function to access the given db
 def get_db():
+    database = os.environ.get('DATABASE')
     mongodb_address = os.environ.get('MONGODB_ADDRESS')
     client = MongoClient(mongodb_address)
-    db = client.ProductFinderCrawlerData
+    db = client.database
     return db
 
 # Insert a document

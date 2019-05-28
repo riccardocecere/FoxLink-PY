@@ -1,10 +1,7 @@
 # Dockerfile
 FROM python:3.6
-
-WORKDIR /usr/app
-
+ADD . /code
+WORKDIR /code
 ADD ./requirements.txt ./
 RUN pip install -r requirements.txt
-ADD ./ ./
-
-CMD ["python", "main.py"]
+CMD ["python", "/src/main.py"]

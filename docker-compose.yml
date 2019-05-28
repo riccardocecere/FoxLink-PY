@@ -44,8 +44,8 @@ services:
       AUTOTHROTTLE_ENABLE: 'true'
       AUTOTHROTTLE_TARGET_CONCURRENCY: 10
       MONGODB_ADDRESS: "mongodb:27017"
+      DATABASE: 'ProductFinderCrawlerData'
     volumes:
-      - ./crawler/data:/data
       - ./crawler/src:/src
     external_links:
       - mongo
@@ -56,6 +56,9 @@ services:
     environment:
       KAFKA_BROKER_URL: kafka:9092
       TOPIC_INPUT: ScrapedPages
+      SHINGLE_WINDOW: 3
+    volumes:
+      - ./shingler/src:/src
 
 networks:
   default:
