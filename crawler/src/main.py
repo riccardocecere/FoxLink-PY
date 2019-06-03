@@ -5,7 +5,6 @@ import time
 import multiprocessing
 import foxlink_crawler
 
-
 KAFKA_BROKER_URL = os.environ.get('KAFKA_BROKER_URL')
 TOPIC_INPUT = os.environ.get('TOPIC_INPUT')
 TOPIC_OUTPUT = os.environ.get('TOPIC_OUTPUT')
@@ -17,13 +16,13 @@ closespider_pagecount = os.environ.get('CLOSESPIDER_PAGECOUNT')
 autothrottle_enable = os.environ.get('AUTOTHROTTLE_ENABLE')
 autothrottle_target_concurrency = os.environ.get('AUTOTHROTTLE_TARGET_CONCURRENCY')
 TIMEOUT_CRAWLER = int(os.environ.get('TIMEOUT_CRAWLER'))
-
+CONSUMER_GROUP = os.environ.get('CONSUMER_GROUP')
 
 
 def main():
     print('Running Consumer')
     try:
-        consumer = kafka.connectConsumer(topic = TOPIC_INPUT, server = KAFKA_BROKER_URL)
+        consumer = kafka.connectConsumer(topic = TOPIC_INPUT, server = KAFKA_BROKER_URL, group = CONSUMER_GROUP)
         print("Consumer connected")
     except Exception as ex:
         print("Error connecting kafka broker as Consumer")

@@ -1,7 +1,6 @@
-import kafka_interface
+import kafka_interface as kafka
 import os
 import classifier
-
 
 KAFKA_BROKER_URL = os.environ.get('KAFKA_BROKER_URL')
 TOPIC_INPUT = os.environ.get('TOPIC_INPUT')
@@ -19,13 +18,20 @@ def main():
     model = classifier.load_classifier(model = MODEL, parquet = TRAINING_PARQUET, training_set = TRAINING_SET)
     print('Running Consumer...')
     try:
-        consumer = kafka_interface.connectConsumer(topic = TOPIC_INPUT, server = KAFKA_BROKER_URL)
+        simple_consumer = kafka.connectSimpleConsumer(KAFKA_BROKER_URL)
+        print(simple_consumer.topics())
+        partitioner = kafka.get_RoundRobin_partitioner_for_topic(TOPIC_OUTPUT,KAFKA_BROKER_URL)
+    except Exception as ex:
+        print('Error with topic partitions')
+        print(ex)
+    try:
+        consumer = kafka.connectConsumer(topic = TOPIC_INPUT, server = KAFKA_BROKER_URL)
         print("Consumer connected")
     except Exception as ex:
         print("Error connecting kafka broker as Consumer")
         print(ex)
     try:
-        producer = kafka_interface.connectProducer(server = KAFKA_BROKER_URL)
+        producer = kafka.connectProducer(server = KAFKA_BROKER_URL, partitioner = partitioner)
         print("Producer connected")
     except Exception as ex:
         print("Error connecting kafka broker as Producer")
@@ -33,12 +39,12 @@ def main():
     i=0
     working = True
     while working:
-        message_dict = kafka_interface.consume(consumer = consumer)
+        message_dict = kafka.consume(consumer = consumer)
         if (message_dict != {}):
             for topic, messages in message_dict.items():
                 for message in messages:
                     if classifier.predict(model = model, input = message.value) == 1:
-                        kafka_interface.send_message(producer = producer, key =i, topic = TOPIC_OUTPUT, message = message.value)
+                        kafka.send_message(producer = producer, key =i, topic = TOPIC_OUTPUT, message = message.value)
                     i=i+1
 if __name__ == '__main__':
     main()

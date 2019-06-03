@@ -1,9 +1,23 @@
 from kafka import KafkaConsumer, KafkaProducer
 import json
 import os
+from kafka.partitioner import RoundRobinPartitioner
+from kafka import TopicPartition
 
 TIMEOUT_POLLING = int(os.environ.get('TIMEOUT_POLLING'))
 MAX_RECORD_POLLING = int(os.environ.get('MAX_RECORD_POLLING'))
+
+def connectSimpleConsumer(server):
+    consumer = None
+    try:
+        consumer = KafkaConsumer(
+            bootstrap_servers=server
+        )
+    except Exception as ex:
+        print('Exception while connecting Kafka broker')
+        print(str(ex))
+    finally:
+        return consumer
 
 def connectConsumer(topic, server):
     consumer = None
@@ -21,11 +35,23 @@ def connectConsumer(topic, server):
     finally:
         return consumer
 
-def connectProducer(server):
+def connectSimpleProducer(server):
+    producer = None
+    try:
+        producer = KafkaProducer(bootstrap_servers=server)
+    except Exception as ex:
+        print('Exception while connecting Kafka broker')
+        print(str(ex))
+    finally:
+        return producer
+
+
+def connectProducer(server, partitioner = None):
     producer = None
     try:
         producer = KafkaProducer(bootstrap_servers=server,
-                                 value_serializer=lambda value: json.dumps(value).encode())
+                                 value_serializer=lambda value: json.dumps(value).encode(),
+                                 partitioner = partitioner)
     except Exception as ex:
         print('Exception while connecting Kafka broker')
         print(str(ex))
@@ -52,6 +78,14 @@ def send_message(producer, topic, key, message):
     except Exception as ex:
         print('Exception in publishing message')
         print(str(ex))
+
+def get_RoundRobin_partitioner_for_topic(topic, server):
+    simple_producer = connectSimpleProducer(server)
+    parts = simple_producer.partitions_for(topic)
+    partitions = [TopicPartition(topic, p) for p in parts]
+    partitioner = RoundRobinPartitioner(partitions=partitions)
+
+    return partitioner
 
 
 

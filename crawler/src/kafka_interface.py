@@ -6,12 +6,13 @@ import os
 TIMEOUT_POLLING = int(os.environ.get('TIMEOUT_POLLING'))
 MAX_RECORD_POLLING = int(os.environ.get('MAX_RECORD_POLLING'))
 
-def connectConsumer(topic, server):
+def connectConsumer(topic, server, group = None):
     consumer = None
     try:
         consumer = KafkaConsumer(
             topic,
             bootstrap_servers=server,
+            group_id = group,
             value_deserializer=lambda value: json.loads(value),
             enable_auto_commit=False,
             auto_offset_reset='earliest'

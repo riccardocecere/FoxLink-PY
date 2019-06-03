@@ -32,11 +32,12 @@ services:
       - ./classifier/model:/model
       - ./classifier/src:/src
 
-  crawler:
+  crawler_1:
     build: ./crawler
-    container_name: 'crawler'
+    container_name: 'crawler-1'
     environment:
       KAFKA_BROKER_URL: kafka:9092
+      CONSUMER_GROUP: 'crawlers'
       TOPIC_INPUT: ClassifiedDomains
       TOPIC_OUTPUT: ScrapedPages
       TIMEOUT_POLLING: 10
@@ -47,14 +48,240 @@ services:
       CLOSESPIDER_PAGECOUNT: 25
       AUTOTHROTTLE_ENABLE: 'true'
       AUTOTHROTTLE_TARGET_CONCURRENCY: 10
-      MONGODB_ADDRESS: "mongodb:27017"
-      DATABASE: 'ProductFinderCrawlerData'
       TIMEOUT_CRAWLER: 180
       TIMEOUT_DOWNLOAD: '5'
+      MONGODB_ADDRESS: "mongodb:27017"
+      DATABASE: 'ProductFinderCrawlerData'
     volumes:
       - ./crawler/src:/src
     external_links:
       - mongo
+
+  crawler_2:
+    build: ./crawler
+    container_name: 'crawler-2'
+    environment:
+      KAFKA_BROKER_URL: kafka:9092
+      CONSUMER_GROUP: 'crawlers'
+      TOPIC_INPUT: ClassifiedDomains
+      TOPIC_OUTPUT: ScrapedPages
+      TIMEOUT_POLLING: 10
+      MAX_RECORD_POLLING: 5
+      MESSAGES_PER_SECOND: 1000
+      DEPTH_LIMIT: 8
+      DOWLOAND_DELAY: 0.3
+      CLOSESPIDER_PAGECOUNT: 25
+      AUTOTHROTTLE_ENABLE: 'true'
+      AUTOTHROTTLE_TARGET_CONCURRENCY: 10
+      TIMEOUT_CRAWLER: 180
+      TIMEOUT_DOWNLOAD: '5'
+      MONGODB_ADDRESS: "mongodb:27017"
+      DATABASE: 'ProductFinderCrawlerData'
+    volumes:
+      - ./crawler/src:/src
+    external_links:
+      - mongo
+
+  crawler_3:
+    build: ./crawler
+    container_name: 'crawler-3'
+    environment:
+      KAFKA_BROKER_URL: kafka:9092
+      CONSUMER_GROUP: 'crawlers'
+      TOPIC_INPUT: ClassifiedDomains
+      TOPIC_OUTPUT: ScrapedPages
+      TIMEOUT_POLLING: 10
+      MAX_RECORD_POLLING: 5
+      MESSAGES_PER_SECOND: 1000
+      DEPTH_LIMIT: 8
+      DOWLOAND_DELAY: 0.3
+      CLOSESPIDER_PAGECOUNT: 25
+      AUTOTHROTTLE_ENABLE: 'true'
+      AUTOTHROTTLE_TARGET_CONCURRENCY: 10
+      TIMEOUT_CRAWLER: 180
+      TIMEOUT_DOWNLOAD: '5'
+      MONGODB_ADDRESS: "mongodb:27017"
+      DATABASE: 'ProductFinderCrawlerData'
+    volumes:
+      - ./crawler/src:/src
+    external_links:
+      - mongo
+
+  crawler_4:
+    build: ./crawler
+    container_name: 'crawler-4'
+    environment:
+      KAFKA_BROKER_URL: kafka:9092
+      CONSUMER_GROUP: 'crawlers'
+      TOPIC_INPUT: ClassifiedDomains
+      TOPIC_OUTPUT: ScrapedPages
+      TIMEOUT_POLLING: 10
+      MAX_RECORD_POLLING: 5
+      MESSAGES_PER_SECOND: 1000
+      DEPTH_LIMIT: 8
+      DOWLOAND_DELAY: 0.3
+      CLOSESPIDER_PAGECOUNT: 25
+      AUTOTHROTTLE_ENABLE: 'true'
+      AUTOTHROTTLE_TARGET_CONCURRENCY: 10
+      TIMEOUT_CRAWLER: 180
+      TIMEOUT_DOWNLOAD: '5'
+      MONGODB_ADDRESS: "mongodb:27017"
+      DATABASE: 'ProductFinderCrawlerData'
+    volumes:
+      - ./crawler/src:/src
+    external_links:
+      - mongo
+
+  crawler_5:
+    build: ./crawler
+    container_name: 'crawler-5'
+    environment:
+      KAFKA_BROKER_URL: kafka:9092
+      CONSUMER_GROUP: 'crawlers'
+      TOPIC_INPUT: ClassifiedDomains
+      TOPIC_OUTPUT: ScrapedPages
+      TIMEOUT_POLLING: 10
+      MAX_RECORD_POLLING: 5
+      MESSAGES_PER_SECOND: 1000
+      DEPTH_LIMIT: 8
+      DOWLOAND_DELAY: 0.3
+      CLOSESPIDER_PAGECOUNT: 25
+      AUTOTHROTTLE_ENABLE: 'true'
+      AUTOTHROTTLE_TARGET_CONCURRENCY: 10
+      TIMEOUT_CRAWLER: 180
+      TIMEOUT_DOWNLOAD: '5'
+      MONGODB_ADDRESS: "mongodb:27017"
+      DATABASE: 'ProductFinderCrawlerData'
+    volumes:
+      - ./crawler/src:/src
+    external_links:
+      - mongo
+
+  crawler_6:
+    build: ./crawler
+    container_name: 'crawler-6'
+    environment:
+      KAFKA_BROKER_URL: kafka:9092
+      CONSUMER_GROUP: 'crawlers'
+      TOPIC_INPUT: ClassifiedDomains
+      TOPIC_OUTPUT: ScrapedPages
+      TIMEOUT_POLLING: 10
+      MAX_RECORD_POLLING: 5
+      MESSAGES_PER_SECOND: 1000
+      DEPTH_LIMIT: 8
+      DOWLOAND_DELAY: 0.3
+      CLOSESPIDER_PAGECOUNT: 25
+      AUTOTHROTTLE_ENABLE: 'true'
+      AUTOTHROTTLE_TARGET_CONCURRENCY: 10
+      TIMEOUT_CRAWLER: 180
+      TIMEOUT_DOWNLOAD: '5'
+      MONGODB_ADDRESS: "mongodb:27017"
+      DATABASE: 'ProductFinderCrawlerData'
+    volumes:
+      - ./crawler/src:/src
+    external_links:
+      - mongo
+
+  crawler_7:
+    build: ./crawler
+    container_name: 'crawler-7'
+    environment:
+      KAFKA_BROKER_URL: kafka:9092
+      CONSUMER_GROUP: 'crawlers'
+      TOPIC_INPUT: ClassifiedDomains
+      TOPIC_OUTPUT: ScrapedPages
+      TIMEOUT_POLLING: 10
+      MAX_RECORD_POLLING: 5
+      MESSAGES_PER_SECOND: 1000
+      DEPTH_LIMIT: 8
+      DOWLOAND_DELAY: 0.3
+      CLOSESPIDER_PAGECOUNT: 25
+      AUTOTHROTTLE_ENABLE: 'true'
+      AUTOTHROTTLE_TARGET_CONCURRENCY: 10
+      TIMEOUT_CRAWLER: 180
+      TIMEOUT_DOWNLOAD: '5'
+      MONGODB_ADDRESS: "mongodb:27017"
+      DATABASE: 'ProductFinderCrawlerData'
+    volumes:
+      - ./crawler/src:/src
+    external_links:
+      - mongo
+
+  crawler_8:
+    build: ./crawler
+    container_name: 'crawler-8'
+    environment:
+      KAFKA_BROKER_URL: kafka:9092
+      CONSUMER_GROUP: 'crawlers'
+      TOPIC_INPUT: ClassifiedDomains
+      TOPIC_OUTPUT: ScrapedPages
+      TIMEOUT_POLLING: 10
+      MAX_RECORD_POLLING: 5
+      MESSAGES_PER_SECOND: 1000
+      DEPTH_LIMIT: 8
+      DOWLOAND_DELAY: 0.3
+      CLOSESPIDER_PAGECOUNT: 25
+      AUTOTHROTTLE_ENABLE: 'true'
+      AUTOTHROTTLE_TARGET_CONCURRENCY: 10
+      TIMEOUT_CRAWLER: 180
+      TIMEOUT_DOWNLOAD: '5'
+      MONGODB_ADDRESS: "mongodb:27017"
+      DATABASE: 'ProductFinderCrawlerData'
+    volumes:
+      - ./crawler/src:/src
+    external_links:
+      - mongo
+
+  crawler_9:
+    build: ./crawler
+    container_name: 'crawler-9'
+    environment:
+      KAFKA_BROKER_URL: kafka:9092
+      CONSUMER_GROUP: 'crawlers'
+      TOPIC_INPUT: ClassifiedDomains
+      TOPIC_OUTPUT: ScrapedPages
+      TIMEOUT_POLLING: 10
+      MAX_RECORD_POLLING: 5
+      MESSAGES_PER_SECOND: 1000
+      DEPTH_LIMIT: 8
+      DOWLOAND_DELAY: 0.3
+      CLOSESPIDER_PAGECOUNT: 25
+      AUTOTHROTTLE_ENABLE: 'true'
+      AUTOTHROTTLE_TARGET_CONCURRENCY: 10
+      TIMEOUT_CRAWLER: 180
+      TIMEOUT_DOWNLOAD: '5'
+      MONGODB_ADDRESS: "mongodb:27017"
+      DATABASE: 'ProductFinderCrawlerData'
+    volumes:
+      - ./crawler/src:/src
+    external_links:
+      - mongo
+
+  crawler_10:
+    build: ./crawler
+    container_name: 'crawler-10'
+    environment:
+      KAFKA_BROKER_URL: kafka:9092
+      CONSUMER_GROUP: 'crawlers'
+      TOPIC_INPUT: ClassifiedDomains
+      TOPIC_OUTPUT: ScrapedPages
+      TIMEOUT_POLLING: 10
+      MAX_RECORD_POLLING: 5
+      MESSAGES_PER_SECOND: 1000
+      DEPTH_LIMIT: 8
+      DOWLOAND_DELAY: 0.3
+      CLOSESPIDER_PAGECOUNT: 25
+      AUTOTHROTTLE_ENABLE: 'true'
+      AUTOTHROTTLE_TARGET_CONCURRENCY: 10
+      TIMEOUT_CRAWLER: 180
+      TIMEOUT_DOWNLOAD: '5'
+      MONGODB_ADDRESS: "mongodb:27017"
+      DATABASE: 'ProductFinderCrawlerData'
+    volumes:
+      - ./crawler/src:/src
+    external_links:
+      - mongo
+
 
   shingler:
     build: ./shingler
