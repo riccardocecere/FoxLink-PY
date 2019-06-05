@@ -5,3 +5,4 @@ pattern
 requests
 bs4
 pyarrow
+pymongo

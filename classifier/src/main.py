@@ -1,6 +1,7 @@
 import kafka_interface as kafka
-import os
+import os, json
 import classifier
+import mongodb_interface as mongo
 
 KAFKA_BROKER_URL = os.environ.get('KAFKA_BROKER_URL')
 TOPIC_INPUT = os.environ.get('TOPIC_INPUT')
@@ -44,6 +45,15 @@ def main():
             for topic, messages in message_dict.items():
                 for message in messages:
                     if classifier.predict(model = model, input = message.value) == 1:
+
+                        content = {
+                            'url_page': message.value,
+                        }
+                        content = json.dumps(content)
+                        collection = 'Classifier'
+                        mongo.put(collection, content)
+                        print('Data saved on db: collection: ' + str(collection) + ' url: ' + message.value)
+
                         kafka.send_message(producer = producer, key =i, topic = TOPIC_OUTPUT, message = message.value)
                     i=i+1
 if __name__ == '__main__':

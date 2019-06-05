@@ -31,7 +31,7 @@ def main():
         print(ex)
 
     '''sending resulting sites to the next phase'''
-    kafka.send_messages(producer = message_producer,topic = TOPIC, pause = SLEEP_TIME, message_set = sites_set)
+    kafka.send_and_save_messages(producer = message_producer,topic = TOPIC, pause = SLEEP_TIME, message_set = sites_set)
 
     print('Stop producer')
 

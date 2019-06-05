@@ -1,11 +1,8 @@
 version: '3'
 services:
   mongo:
-    image: mongo:latest
+    image: bitnami/mongodb:latest
     container_name: 'mongodb'
-    environment:
-      MONGO_INITDB_ROOT_USERNAME: mongo
-      MONGO_INITDB_ROOT_PASSWORD: mongo
     ports:
       - 27017:27017
 
@@ -34,7 +31,7 @@ services:
       KAFKA_INTER_BROKER_LISTENER_NAME: INSIDE
       KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: INSIDE:PLAINTEXT,OUTSIDE:PLAINTEXT
       #KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
-      KAFKA_CREATE_TOPICS: "FoundDomains:1:1,ClassifiedDomains:10:1,ScrapedPages:1:1"
+      KAFKA_CREATE_TOPICS: "DiscoveredDomains:1:1,ClassifiedDomains:10:1,ScrapedPages:1:1"
 
 networks:
   default:

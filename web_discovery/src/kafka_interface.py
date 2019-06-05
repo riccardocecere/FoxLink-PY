@@ -1,6 +1,7 @@
 import json
 from kafka import KafkaProducer, KafkaClient, SimpleProducer
 from time import sleep
+import mongodb_interface as mongo
 
 def connect(server):
     producer=None
@@ -29,11 +30,18 @@ def send_message(producer, topic, key, value):
         print('Exception in publishing message')
         print(str(ex))
 
-def send_messages(producer, topic, pause, message_set):
+def send_and_save_messages(producer, topic, pause, message_set):
     # produce json messages
     i=0
     for elem in message_set:
         try:
+            content = {
+                'url_page': str(elem),
+            }
+            content = json.dumps(content)
+            collection = 'SearxResults'
+            mongo.put(collection, content)
+            print('Data saved on db: collection: ' + str(collection) + ' url: ' + str(elem))
             future = producer.send(topic, value = str(elem))
             result = future.get(timeout=60)
             print('Message sent successfully')

@@ -5,11 +5,15 @@ services:
     container_name: 'web_discovery'
     environment:
       KAFKA_BROKER_URL: kafka:9092
-      TOPIC_OUTPUT: FoundDomains
+      TOPIC_OUTPUT: DiscoveredDomains
       MESSAGES_PER_SECOND: 1000
       SEED: './data/products_seed.txt'
       NUMBER_RESULT_PAGES: 3
       SEARX_ADDRESS: 'http://searx:8888'
+      MONGODB_ADDRESS: "mongodb:27017"
+      DATABASE: DiscoveredDomains
+    external_links:
+      - mongo
     volumes:
       - ./web_discovery/data:/data
       - ./web_discovery/src:/src
@@ -19,7 +23,7 @@ services:
     container_name: 'classifier'
     environment:
       KAFKA_BROKER_URL: kafka:9092
-      TOPIC_INPUT: FoundDomains
+      TOPIC_INPUT: DiscoveredDomains
       TOPIC_OUTPUT: ClassifiedDomains
       TIMEOUT_POLLING: 10
       MAX_RECORD_POLLING: 5
@@ -27,6 +31,10 @@ services:
       TRAINING_SET: './data/training_set.csv'
       TRAINING_PARQUET: './data/training_set.snappy.parquet'
       MODEL: './model/classifier.sav'
+      MONGODB_ADDRESS: "mongodb:27017"
+      DATABASE: CLassifiedDomains
+    external_links:
+      - mongo
     volumes:
       - ./classifier/data:/data
       - ./classifier/model:/model
@@ -51,7 +59,7 @@ services:
       TIMEOUT_CRAWLER: 180
       TIMEOUT_DOWNLOAD: '5'
       MONGODB_ADDRESS: "mongodb:27017"
-      DATABASE: 'ProductFinderCrawlerData'
+      DATABASE: 'CrawledPages'
     volumes:
       - ./crawler/src:/src
     external_links:
@@ -76,7 +84,7 @@ services:
       TIMEOUT_CRAWLER: 180
       TIMEOUT_DOWNLOAD: '5'
       MONGODB_ADDRESS: "mongodb:27017"
-      DATABASE: 'ProductFinderCrawlerData'
+      DATABASE: 'CrawledPages'
     volumes:
       - ./crawler/src:/src
     external_links:
@@ -101,7 +109,7 @@ services:
       TIMEOUT_CRAWLER: 180
       TIMEOUT_DOWNLOAD: '5'
       MONGODB_ADDRESS: "mongodb:27017"
-      DATABASE: 'ProductFinderCrawlerData'
+      DATABASE: 'CrawledPages'
     volumes:
       - ./crawler/src:/src
     external_links:
@@ -126,7 +134,7 @@ services:
       TIMEOUT_CRAWLER: 180
       TIMEOUT_DOWNLOAD: '5'
       MONGODB_ADDRESS: "mongodb:27017"
-      DATABASE: 'ProductFinderCrawlerData'
+      DATABASE: 'CrawledPages'
     volumes:
       - ./crawler/src:/src
     external_links:
@@ -151,7 +159,7 @@ services:
       TIMEOUT_CRAWLER: 180
       TIMEOUT_DOWNLOAD: '5'
       MONGODB_ADDRESS: "mongodb:27017"
-      DATABASE: 'ProductFinderCrawlerData'
+      DATABASE: 'CrawledPages'
     volumes:
       - ./crawler/src:/src
     external_links:
@@ -176,7 +184,7 @@ services:
       TIMEOUT_CRAWLER: 180
       TIMEOUT_DOWNLOAD: '5'
       MONGODB_ADDRESS: "mongodb:27017"
-      DATABASE: 'ProductFinderCrawlerData'
+      DATABASE: 'CrawledPages'
     volumes:
       - ./crawler/src:/src
     external_links:
@@ -201,7 +209,7 @@ services:
       TIMEOUT_CRAWLER: 180
       TIMEOUT_DOWNLOAD: '5'
       MONGODB_ADDRESS: "mongodb:27017"
-      DATABASE: 'ProductFinderCrawlerData'
+      DATABASE: 'CrawledPages'
     volumes:
       - ./crawler/src:/src
     external_links:
@@ -226,7 +234,7 @@ services:
       TIMEOUT_CRAWLER: 180
       TIMEOUT_DOWNLOAD: '5'
       MONGODB_ADDRESS: "mongodb:27017"
-      DATABASE: 'ProductFinderCrawlerData'
+      DATABASE: 'CrawledPages'
     volumes:
       - ./crawler/src:/src
     external_links:
@@ -251,7 +259,7 @@ services:
       TIMEOUT_CRAWLER: 180
       TIMEOUT_DOWNLOAD: '5'
       MONGODB_ADDRESS: "mongodb:27017"
-      DATABASE: 'ProductFinderCrawlerData'
+      DATABASE: 'CrawledPages'
     volumes:
       - ./crawler/src:/src
     external_links:
@@ -276,12 +284,11 @@ services:
       TIMEOUT_CRAWLER: 180
       TIMEOUT_DOWNLOAD: '5'
       MONGODB_ADDRESS: "mongodb:27017"
-      DATABASE: 'ProductFinderCrawlerData'
+      DATABASE: 'CrawledPages'
     volumes:
       - ./crawler/src:/src
     external_links:
       - mongo
-
 
   shingler:
     build: ./shingler
