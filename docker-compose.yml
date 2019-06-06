@@ -48,6 +48,7 @@ services:
       CONSUMER_GROUP: 'crawlers'
       TOPIC_INPUT: 'ClassifiedDomains'
       TOPIC_OUTPUT: 'ScrapedPages'
+      TOPIC_OUTPUT_DOMAINS: 'CrawledDomains'
       TIMEOUT_POLLING_MS: 10
       MAX_RECORD_POLLING: 5
       MESSAGES_PER_SECOND: 1000
@@ -73,6 +74,7 @@ services:
       CONSUMER_GROUP: 'crawlers'
       TOPIC_INPUT: 'ClassifiedDomains'
       TOPIC_OUTPUT: 'ScrapedPages'
+      TOPIC_OUTPUT_DOMAINS: 'CrawledDomains'
       TIMEOUT_POLLING_MS: 10
       MAX_RECORD_POLLING: 5
       MESSAGES_PER_SECOND: 1000
@@ -98,6 +100,7 @@ services:
       CONSUMER_GROUP: 'crawlers'
       TOPIC_INPUT: 'ClassifiedDomains'
       TOPIC_OUTPUT: 'ScrapedPages'
+      TOPIC_OUTPUT_DOMAINS: 'CrawledDomains'
       TIMEOUT_POLLING_MS: 10
       MAX_RECORD_POLLING: 5
       MESSAGES_PER_SECOND: 1000
@@ -123,6 +126,7 @@ services:
       CONSUMER_GROUP: 'crawlers'
       TOPIC_INPUT: 'ClassifiedDomains'
       TOPIC_OUTPUT: 'ScrapedPages'
+      TOPIC_OUTPUT_DOMAINS: 'CrawledDomains'
       TIMEOUT_POLLING_MS: 10
       MAX_RECORD_POLLING: 5
       MESSAGES_PER_SECOND: 1000
@@ -148,6 +152,7 @@ services:
       CONSUMER_GROUP: 'crawlers'
       TOPIC_INPUT: 'ClassifiedDomains'
       TOPIC_OUTPUT: 'ScrapedPages'
+      TOPIC_OUTPUT_DOMAINS: 'CrawledDomains'
       TIMEOUT_POLLING_MS: 10
       MAX_RECORD_POLLING: 5
       MESSAGES_PER_SECOND: 1000
@@ -173,6 +178,7 @@ services:
       CONSUMER_GROUP: 'crawlers'
       TOPIC_INPUT: 'ClassifiedDomains'
       TOPIC_OUTPUT: 'ScrapedPages'
+      TOPIC_OUTPUT_DOMAINS: 'CrawledDomains'
       TIMEOUT_POLLING_MS: 10
       MAX_RECORD_POLLING: 5
       MESSAGES_PER_SECOND: 1000
@@ -198,6 +204,7 @@ services:
       CONSUMER_GROUP: 'crawlers'
       TOPIC_INPUT: 'ClassifiedDomains'
       TOPIC_OUTPUT: 'ScrapedPages'
+      TOPIC_OUTPUT_DOMAINS: 'CrawledDomains'
       TIMEOUT_POLLING_MS: 10
       MAX_RECORD_POLLING: 5
       MESSAGES_PER_SECOND: 1000
@@ -223,6 +230,7 @@ services:
       CONSUMER_GROUP: 'crawlers'
       TOPIC_INPUT: 'ClassifiedDomains'
       TOPIC_OUTPUT: 'ScrapedPages'
+      TOPIC_OUTPUT_DOMAINS: 'CrawledDomains'
       TIMEOUT_POLLING_MS: 10
       MAX_RECORD_POLLING: 5
       MESSAGES_PER_SECOND: 1000
@@ -248,6 +256,7 @@ services:
       CONSUMER_GROUP: 'crawlers'
       TOPIC_INPUT: 'ClassifiedDomains'
       TOPIC_OUTPUT: 'ScrapedPages'
+      TOPIC_OUTPUT_DOMAINS: 'CrawledDomains'
       TIMEOUT_POLLING_MS: 10
       MAX_RECORD_POLLING: 5
       MESSAGES_PER_SECOND: 1000
@@ -273,6 +282,7 @@ services:
       CONSUMER_GROUP: 'crawlers'
       TOPIC_INPUT: 'ClassifiedDomains'
       TOPIC_OUTPUT: 'ScrapedPages'
+      TOPIC_OUTPUT_DOMAINS: 'CrawledDomains'
       TIMEOUT_POLLING_MS: 10
       MAX_RECORD_POLLING: 5
       MESSAGES_PER_SECOND: 1000
@@ -296,11 +306,24 @@ services:
     environment:
       KAFKA_BROKER_URL: 'kafka:9092'
       TOPIC_INPUT: 'ScrapedPages'
+      TOPIC_OUTPUT: 'ShingledPages'
       TIMEOUT_POLLING_MS: 10
       MAX_RECORD_POLLING: 5
       SHINGLE_WINDOW: 3
     volumes:
       - ./shingler/src:/src
+
+  clusterizer:
+    build: ./clusterizer
+    container_name: 'clusterizer'
+    environment:
+      KAFKA_BROKER_URL: 'kafka:9092'
+      TOPIC_INPUT_PAGES: 'ShingledPages'
+      TOPIC_INPUT_DOMAINS: 'CrawledDomains'
+      TIMEOUT_POLLING_MS: 10
+      MAX_RECORD_POLLING: 5
+    volumes:
+      - ./clusterizer/src:/src
 
 networks:
   default:

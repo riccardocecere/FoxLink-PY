@@ -7,11 +7,13 @@ from bs4 import BeautifulSoup
 
 KAFKA_BROKER_URL = os.environ.get('KAFKA_BROKER_URL')
 INPUT_TOPIC = os.environ.get('TOPIC_INPUT')
+TOPIC_OUTPUT = os.environ.get('TOPIC_OUTPUT')
 SHINGLE_WINDOW = int(os.environ.get('SHINGLE_WINDOW'))
 
 
 if __name__ == '__main__':
     consumer = kafka.connectConsumer(topic = INPUT_TOPIC, server = KAFKA_BROKER_URL)
+    producer = kafka.connectProducer(server = KAFKA_BROKER_URL)
     i=0
     working = True
     while working:
@@ -24,5 +26,6 @@ if __name__ == '__main__':
                     message.value['shingle_vector'] = str(shingle_vector)
                     print(str(i)+' Received message: ' + str(message.value['url_page']))
                     print('Shingle Vector: '+str(message.value['shingle_vector']))
+                    kafka.send_message(producer = producer, topic = TOPIC_OUTPUT, value = message.value)
                     i+=1
         #print('passo')

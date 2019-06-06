@@ -31,7 +31,8 @@ class ProductFinderSpider(CrawlSpider):
             full_domain = text_parser.add_www_domain(domain)
             body = BeautifulSoup(response.body,'html.parser').body
             relevant_links = crawler_utils.extract_relevant_links(body, text_parser.remove_www_domain(domain), full_domain)
-            content = {'url_page': str(response.url),
+            content = {'domain': text_parser.extract_domain_from_url(response.url),
+                       'url_page': str(response.url),
                        'html_raw_text': str(body),
                        'page_relevant_links': str(list(set(relevant_links))),
                        'depth_level': str(response.meta['depth']),

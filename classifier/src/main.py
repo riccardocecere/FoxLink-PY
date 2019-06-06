@@ -19,8 +19,6 @@ def main():
     model = classifier.load_classifier(model = MODEL, parquet = TRAINING_PARQUET, training_set = TRAINING_SET)
     print('Running Consumer...')
     try:
-        simple_consumer = kafka.connectSimpleConsumer(KAFKA_BROKER_URL)
-        print(simple_consumer.topics())
         partitioner = kafka.get_RoundRobin_partitioner_for_topic(TOPIC_OUTPUT,KAFKA_BROKER_URL)
     except Exception as ex:
         print('Error with topic partitions')
@@ -44,15 +42,10 @@ def main():
         if (message_dict != {}):
             for topic, messages in message_dict.items():
                 for message in messages:
-                    if classifier.predict(model = model, input = message.value) == 1:
-
-                        content = {
-                            'url_page': message.value,
-                        }
-                        content = json.dumps(content)
+                    if classifier.predict(model = model, input = message.value['url_page']) == 1:
                         collection = 'Classifier'
-                        mongo.put(collection, content)
-                        print('Data saved on db: collection: ' + str(collection) + ' url: ' + message.value)
+                        mongo.put(collection, message.value)
+                        print('Data saved on db: collection: ' + str(collection) + ' url: ' + message.value['url_page'])
 
                         kafka.send_message(producer = producer, key =i, topic = TOPIC_OUTPUT, message = message.value)
                     i=i+1

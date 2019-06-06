@@ -8,8 +8,7 @@ def connect(server):
     try:
         #producer = KafkaProducer(bootstrap_servers=KAFKA_BROKER_URL, api_version=(0,10), value_serializer=lambda m: dumps(m).encode('ascii'))
         producer = KafkaProducer(bootstrap_servers=server,
-                                 api_version=(0, 10),
-                                 value_serializer=lambda value: json.dumps(value).encode())
+                                 value_serializer=lambda value: json.dumps(value).encode('utf-8'))
         print("Connected successfully")
     except Exception as ex:
         print('Exception while connecting Kafka')
@@ -36,13 +35,13 @@ def send_and_save_messages(producer, topic, pause, message_set):
     for elem in message_set:
         try:
             content = {
-                'url_page': str(elem),
+                'url_page': elem,
             }
-            content = json.dumps(content)
+            content_json = json.dumps(content)
             collection = 'SearxResults'
-            mongo.put(collection, content)
+            mongo.put(collection, content_json)
             print('Data saved on db: collection: ' + str(collection) + ' url: ' + str(elem))
-            future = producer.send(topic, value = str(elem))
+            future = producer.send(topic, value = content)
             result = future.get(timeout=60)
             print('Message sent successfully')
             print("Message sent: " + str(i) + "-" + str(elem))

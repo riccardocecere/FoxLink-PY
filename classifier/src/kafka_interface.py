@@ -25,7 +25,7 @@ def connectConsumer(topic, server):
         consumer = KafkaConsumer(
             topic,
             bootstrap_servers=server,
-            value_deserializer=lambda value: json.loads(value),
+            value_deserializer=lambda value: json.loads(value.decode('utf-8')),
             enable_auto_commit=False,
             auto_offset_reset='earliest'
         )
@@ -50,7 +50,7 @@ def connectProducer(server, partitioner = None):
     producer = None
     try:
         producer = KafkaProducer(bootstrap_servers=server,
-                                 value_serializer=lambda value: json.dumps(value).encode(),
+                                 value_serializer=lambda value: json.dumps(value).encode('utf-8'),
                                  partitioner = partitioner)
     except Exception as ex:
         print('Exception while connecting Kafka broker')

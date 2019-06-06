@@ -29,6 +29,7 @@ def insert_home_pages(collections):
             try:
                 response = requests.get(collection, timeout=15).text
                 content = {
+                    'domain': text_parser.extract_domain_from_url(collection),
                     'url_page': collection,
                     'html_raw_text': str(BeautifulSoup(response, 'html.parser').body),
                     'page_relevant_links':

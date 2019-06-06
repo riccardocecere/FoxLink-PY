@@ -13,7 +13,7 @@ def connectConsumer(topic, server, group = None):
             topic,
             bootstrap_servers=server,
             group_id = group,
-            value_deserializer=lambda value: json.loads(value),
+            value_deserializer=lambda value: json.loads(value.decode('utf-8')),
             enable_auto_commit=False,
             auto_offset_reset='earliest'
         )
