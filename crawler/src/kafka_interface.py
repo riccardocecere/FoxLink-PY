@@ -3,7 +3,7 @@ from time import sleep
 import json
 import os
 
-TIMEOUT_POLLING = int(os.environ.get('TIMEOUT_POLLING'))
+TIMEOUT_POLLING = int(os.environ.get('TIMEOUT_POLLING_MS'))
 MAX_RECORD_POLLING = int(os.environ.get('MAX_RECORD_POLLING'))
 
 def connectConsumer(topic, server, group = None):

@@ -4,7 +4,7 @@ import os
 from kafka.partitioner import RoundRobinPartitioner
 from kafka import TopicPartition
 
-TIMEOUT_POLLING = int(os.environ.get('TIMEOUT_POLLING'))
+TIMEOUT_POLLING = int(os.environ.get('TIMEOUT_POLLING_MS'))
 MAX_RECORD_POLLING = int(os.environ.get('MAX_RECORD_POLLING'))
 
 def connectSimpleConsumer(server):

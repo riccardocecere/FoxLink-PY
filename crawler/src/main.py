@@ -5,9 +5,9 @@ import time
 import multiprocessing
 import foxlink_crawler
 
-KAFKA_BROKER_URL = os.environ.get('KAFKA_BROKER_URL')
-TOPIC_INPUT = os.environ.get('TOPIC_INPUT')
-TOPIC_OUTPUT = os.environ.get('TOPIC_OUTPUT')
+KAFKA_BROKER_URL = str(os.environ.get('KAFKA_BROKER_URL'))
+TOPIC_INPUT = str(os.environ.get('TOPIC_INPUT'))
+TOPIC_OUTPUT = str(os.environ.get('TOPIC_OUTPUT'))
 MESSAGES_PER_SECOND = float(os.environ.get('MESSAGES_PER_SECOND'))
 SLEEP_TIME = 1 / MESSAGES_PER_SECOND
 depth_limit = os.environ.get('DEPTH_LIMIT')
@@ -44,20 +44,24 @@ def main():
                     print('Received message: ' + str(message.value))
                     urls.append(message.value)
                 try:
-                    print('Starting new crawling process...')
-                    '''inizializing a new thread for crawl use to be stopped after TIMEOUT_CRAWLER passes'''
-                    p = multiprocessing.Process(target=foxlink_crawler.intrasite_crawling_iterative, name="Crawler",
-                                                args=(urls,depth_limit,download_delay,
+                    # print('Starting new crawling process...')
+                    # '''inizializing a new thread for crawl use to be stopped after TIMEOUT_CRAWLER passes'''
+                    # p = multiprocessing.Process(target=foxlink_crawler.intrasite_crawling_iterative, name="Crawler",
+                    #                             args=(urls,depth_limit,download_delay,
+                    #                                   closespider_pagecount,autothrottle_enable,
+                    #                                   autothrottle_target_concurrency))
+                    # p.start()
+                    # # Wait n seconds for crawling
+                    # time.sleep(TIMEOUT_CRAWLER)
+                    # # Terminate crawling
+                    # p.terminate()
+                    # # Cleanup
+                    # p.join()
+                    # print('Join process')
+
+                    foxlink_crawler.intrasite_crawling_iterative(urls,depth_limit,download_delay,
                                                       closespider_pagecount,autothrottle_enable,
-                                                      autothrottle_target_concurrency))
-                    p.start()
-                    # Wait n seconds for crawling
-                    time.sleep(TIMEOUT_CRAWLER)
-                    # Terminate crawling
-                    p.terminate()
-                    # Cleanup
-                    p.join()
-                    print('Join process')
+                                                      autothrottle_target_concurrency)
 
                 except Exception as ex:
                     print(ex)
