@@ -44,10 +44,11 @@ services:
     build: ./crawler
     container_name: 'crawler-1'
     environment:
+      ID: '1'
       KAFKA_BROKER_URL: 'kafka:9092'
       CONSUMER_GROUP: 'crawlers'
       TOPIC_INPUT: 'ClassifiedDomains'
-      TOPIC_OUTPUT: 'ScrapedPages'
+      TOPIC_OUTPUT_PAGES: 'ScrapedPages'
       TOPIC_OUTPUT_DOMAINS: 'CrawledDomains'
       TIMEOUT_POLLING_MS: 10
       MAX_RECORD_POLLING: 5
@@ -70,10 +71,11 @@ services:
     build: ./crawler
     container_name: 'crawler-2'
     environment:
+      ID: '2'
       KAFKA_BROKER_URL: 'kafka:9092'
       CONSUMER_GROUP: 'crawlers'
       TOPIC_INPUT: 'ClassifiedDomains'
-      TOPIC_OUTPUT: 'ScrapedPages'
+      TOPIC_OUTPUT_PAGES: 'ScrapedPages'
       TOPIC_OUTPUT_DOMAINS: 'CrawledDomains'
       TIMEOUT_POLLING_MS: 10
       MAX_RECORD_POLLING: 5
@@ -96,10 +98,11 @@ services:
     build: ./crawler
     container_name: 'crawler-3'
     environment:
+      ID: '3'
       KAFKA_BROKER_URL: 'kafka:9092'
       CONSUMER_GROUP: 'crawlers'
       TOPIC_INPUT: 'ClassifiedDomains'
-      TOPIC_OUTPUT: 'ScrapedPages'
+      TOPIC_OUTPUT_PAGES: 'ScrapedPages'
       TOPIC_OUTPUT_DOMAINS: 'CrawledDomains'
       TIMEOUT_POLLING_MS: 10
       MAX_RECORD_POLLING: 5
@@ -122,10 +125,11 @@ services:
     build: ./crawler
     container_name: 'crawler-4'
     environment:
+      ID: '4'
       KAFKA_BROKER_URL: 'kafka:9092'
       CONSUMER_GROUP: 'crawlers'
       TOPIC_INPUT: 'ClassifiedDomains'
-      TOPIC_OUTPUT: 'ScrapedPages'
+      TOPIC_OUTPUT_PAGES: 'ScrapedPages'
       TOPIC_OUTPUT_DOMAINS: 'CrawledDomains'
       TIMEOUT_POLLING_MS: 10
       MAX_RECORD_POLLING: 5
@@ -148,10 +152,11 @@ services:
     build: ./crawler
     container_name: 'crawler-5'
     environment:
+      ID: '5'
       KAFKA_BROKER_URL: 'kafka:9092'
       CONSUMER_GROUP: 'crawlers'
       TOPIC_INPUT: 'ClassifiedDomains'
-      TOPIC_OUTPUT: 'ScrapedPages'
+      TOPIC_OUTPUT_PAGES: 'ScrapedPages'
       TOPIC_OUTPUT_DOMAINS: 'CrawledDomains'
       TIMEOUT_POLLING_MS: 10
       MAX_RECORD_POLLING: 5
@@ -174,10 +179,11 @@ services:
     build: ./crawler
     container_name: 'crawler-6'
     environment:
+      ID: '6'
       KAFKA_BROKER_URL: 'kafka:9092'
       CONSUMER_GROUP: 'crawlers'
       TOPIC_INPUT: 'ClassifiedDomains'
-      TOPIC_OUTPUT: 'ScrapedPages'
+      TOPIC_OUTPUT_PAGES: 'ScrapedPages'
       TOPIC_OUTPUT_DOMAINS: 'CrawledDomains'
       TIMEOUT_POLLING_MS: 10
       MAX_RECORD_POLLING: 5
@@ -200,10 +206,11 @@ services:
     build: ./crawler
     container_name: 'crawler-7'
     environment:
+      ID: '7'
       KAFKA_BROKER_URL: 'kafka:9092'
       CONSUMER_GROUP: 'crawlers'
       TOPIC_INPUT: 'ClassifiedDomains'
-      TOPIC_OUTPUT: 'ScrapedPages'
+      TOPIC_OUTPUT_PAGES: 'ScrapedPages'
       TOPIC_OUTPUT_DOMAINS: 'CrawledDomains'
       TIMEOUT_POLLING_MS: 10
       MAX_RECORD_POLLING: 5
@@ -226,10 +233,11 @@ services:
     build: ./crawler
     container_name: 'crawler-8'
     environment:
+      ID: '8'
       KAFKA_BROKER_URL: 'kafka:9092'
       CONSUMER_GROUP: 'crawlers'
       TOPIC_INPUT: 'ClassifiedDomains'
-      TOPIC_OUTPUT: 'ScrapedPages'
+      TOPIC_OUTPUT_PAGES: 'ScrapedPages'
       TOPIC_OUTPUT_DOMAINS: 'CrawledDomains'
       TIMEOUT_POLLING_MS: 10
       MAX_RECORD_POLLING: 5
@@ -252,10 +260,11 @@ services:
     build: ./crawler
     container_name: 'crawler-9'
     environment:
+      ID: '9'
       KAFKA_BROKER_URL: 'kafka:9092'
       CONSUMER_GROUP: 'crawlers'
       TOPIC_INPUT: 'ClassifiedDomains'
-      TOPIC_OUTPUT: 'ScrapedPages'
+      TOPIC_OUTPUT_PAGES: 'ScrapedPages'
       TOPIC_OUTPUT_DOMAINS: 'CrawledDomains'
       TIMEOUT_POLLING_MS: 10
       MAX_RECORD_POLLING: 5
@@ -278,13 +287,14 @@ services:
     build: ./crawler
     container_name: 'crawler-10'
     environment:
+      ID: '10'
       KAFKA_BROKER_URL: 'kafka:9092'
       CONSUMER_GROUP: 'crawlers'
       TOPIC_INPUT: 'ClassifiedDomains'
-      TOPIC_OUTPUT: 'ScrapedPages'
+      TOPIC_OUTPUT_PAGES: 'ScrapedPages'
       TOPIC_OUTPUT_DOMAINS: 'CrawledDomains'
       TIMEOUT_POLLING_MS: 10
-      MAX_RECORD_POLLING: 5
+      MAX_RECORD_POLLING: 1
       MESSAGES_PER_SECOND: 1000
       DEPTH_LIMIT: 8
       DOWLOAND_DELAY: 0.3
@@ -305,25 +315,46 @@ services:
     container_name: 'shingler'
     environment:
       KAFKA_BROKER_URL: 'kafka:9092'
-      TOPIC_INPUT: 'ScrapedPages'
-      TOPIC_OUTPUT: 'ShingledPages'
+      TOPIC_INPUT_PAGES: 'ScrapedPages'
+      TOPIC_INPUT_DOMAINS: 'CrawledDomains'
+      TOPIC_OUTPUT: 'ShingledDomains'
       TIMEOUT_POLLING_MS: 10
       MAX_RECORD_POLLING: 5
       SHINGLE_WINDOW: 3
+      MONGODB_ADDRESS: "mongodb:27017"
+      DATABASE: 'ShingledDomainPages'
     volumes:
       - ./shingler/src:/src
+    external_links:
+      - mongo
 
   clusterizer:
     build: ./clusterizer
     container_name: 'clusterizer'
     environment:
       KAFKA_BROKER_URL: 'kafka:9092'
-      TOPIC_INPUT_PAGES: 'ShingledPages'
-      TOPIC_INPUT_DOMAINS: 'CrawledDomains'
+      TOPIC_INPUT: 'ShingledDomains'
+      TOPIC_OUTPUT: 'ClusterizedDomains'
       TIMEOUT_POLLING_MS: 10
       MAX_RECORD_POLLING: 5
+      MIN_SIZE_CLUSTER: 0
+      MONGODB_ADDRESS: "mongodb:27017"
+      DATABASE_READ: 'ShingledDomainPages'
+      DATABASE_WRITE: 'ClusterizedDomains'
     volumes:
       - ./clusterizer/src:/src
+
+  linkage_analyzer:
+    build: ./linkage_analyzer
+    container_name: 'linkage_analyzer'
+    environment:
+      KAFKA_BROKER_URL: 'kafka:9092'
+      TOPIC_INPUT: 'ClusterizedDomains'
+      TIMEOUT_POLLING_MS: 10
+      MAX_RECORD_POLLING: 5
+      DATABASE: 'TaggedDomainClusters'
+    volumes:
+      - ./linkage_analyzer/src:/src
 
 networks:
   default:

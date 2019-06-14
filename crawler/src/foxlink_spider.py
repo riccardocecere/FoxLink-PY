@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+import scrapy.signals
 from scrapy.spiders import CrawlSpider, Rule
 from scrapy.linkextractors import LinkExtractor
 import crawler_utils, json
@@ -11,14 +12,17 @@ import kafka_interface as kafka
 import os
 
 TIMEOUT_DOWNLOAD = os.environ.get('TIMEOUT_DOWNLOAD')
-TOPIC_OUTPUT = os.environ.get('TOPIC_OUTPUT')
+TOPIC_OUTPUT_PAGES = os.environ.get('TOPIC_OUTPUT_PAGES')
+TOPIC_OUTPUT_DOMAINS = os.environ.get('TOPIC_OUTPUT_DOMAINS')
 KAFKA_ADDRESS = os.environ.get('KAFKA_BROKER_URL')
+ID = os.environ.get('ID')
 
+producer = kafka.connectProducer(server = KAFKA_ADDRESS)
 
 # Definition of foxlink spider
 class ProductFinderSpider(CrawlSpider):
 
-    name = 'foxlink_spider'
+    name = 'foxlink_spider'+ID
 
     rules = (
         Rule(LinkExtractor(), callback='parse_item', follow=True),
@@ -36,7 +40,8 @@ class ProductFinderSpider(CrawlSpider):
                        'html_raw_text': str(body),
                        'page_relevant_links': str(list(set(relevant_links))),
                        'depth_level': str(response.meta['depth']),
-                       'referring_url': str(response.request.headers.get('Referer',None))}
+                       'referring_url': str(response.request.headers.get('Referer',None)),
+                       'spider_id': ID}
             content_json = json.dumps(content)
             wdata = json.loads(content_json)
             print('Crawled page: ' + wdata['url_page'])
@@ -46,8 +51,7 @@ class ProductFinderSpider(CrawlSpider):
             except Exception as ex:
                 print('Failed while saving')
             try:
-                producer = kafka.connectProducer(server = KAFKA_ADDRESS)
-                kafka.send_message(producer = producer, topic = TOPIC_OUTPUT, value = content)
+                kafka.send_message(producer = producer, topic = TOPIC_OUTPUT_PAGES, value = content)
             except Exception as ex:
                 print(ex)
                 print('Problem to sent message')
@@ -87,5 +91,19 @@ def start_crawling(start_urls, allowed_domains,depth_limit,download_delay, close
 
     process = CrawlerProcess(custom_settings)
     process.crawl(ProductFinderSpider, start_urls=start_urls, allowed_domains=allowed_domains)
+
+    def spider_ended(spider, reason):
+        print('Spider ended:', spider.name, reason)
+        for url in spider.start_urls:
+
+         content = {
+             'domain': str(text_parser.extract_domain_from_url(url)),
+             'spider_id': ID
+         }
+         kafka.send_message(producer = producer, topic = TOPIC_OUTPUT_DOMAINS, value = content)
+
+    for crawler in process.crawlers:
+        crawler.signals.connect(spider_ended, signal=scrapy.signals.spider_closed)
+
     process.start()
     return None

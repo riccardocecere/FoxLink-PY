@@ -44,7 +44,7 @@ def main():
                 for message in messages:
                     if classifier.predict(model = model, input = message.value['url_page']) == 1:
                         collection = 'Classifier'
-                        mongo.put(collection, message.value)
+                        mongo.put(collection, json.dumps(message.value))
                         print('Data saved on db: collection: ' + str(collection) + ' url: ' + message.value['url_page'])
 
                         kafka.send_message(producer = producer, key =i, topic = TOPIC_OUTPUT, message = message.value)

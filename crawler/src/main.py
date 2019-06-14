@@ -7,7 +7,7 @@ import foxlink_crawler
 
 KAFKA_BROKER_URL = str(os.environ.get('KAFKA_BROKER_URL'))
 TOPIC_INPUT = str(os.environ.get('TOPIC_INPUT'))
-TOPIC_OUTPUT = str(os.environ.get('TOPIC_OUTPUT'))
+TOPIC_OUTPUT_PAGES = str(os.environ.get('TOPIC_OUTPUT_PAGES'))
 TOPIC_OUTPUT_DOMAINS = str(os.environ.get('TOPIC_OUTPUT_DOMAINS'))
 MESSAGES_PER_SECOND = float(os.environ.get('MESSAGES_PER_SECOND'))
 SLEEP_TIME = 1 / MESSAGES_PER_SECOND
@@ -49,11 +49,11 @@ def main():
                     foxlink_crawler.intrasite_crawling_iterative(urls,depth_limit,download_delay,
                                                       closespider_pagecount,autothrottle_enable,
                                                       autothrottle_target_concurrency)
-                    for url in urls:
-                        content = {
-                            'domain': str(url)
-                        }
-                        kafka.send_message(producer = producer, topic = TOPIC_OUTPUT_DOMAINS, value = content)
+                    # for url in urls:
+                    #     content = {
+                    #         'domain': str(url)
+                    #     }
+                    #     kafka.send_message(producer = producer, topic = TOPIC_OUTPUT_DOMAINS, value = content)
                 except Exception as ex:
                     print(ex)
 
