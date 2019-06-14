@@ -12,8 +12,7 @@ import kafka_interface as kafka
 import os
 
 TIMEOUT_DOWNLOAD = os.environ.get('TIMEOUT_DOWNLOAD')
-TOPIC_OUTPUT_PAGES = os.environ.get('TOPIC_OUTPUT_PAGES')
-TOPIC_OUTPUT_DOMAINS = os.environ.get('TOPIC_OUTPUT_DOMAINS')
+TOPIC_OUTPUT = os.environ.get('TOPIC_OUTPUT')
 KAFKA_ADDRESS = os.environ.get('KAFKA_BROKER_URL')
 ID = os.environ.get('ID')
 
@@ -50,12 +49,6 @@ class ProductFinderSpider(CrawlSpider):
                 print('Data saved on DB')
             except Exception as ex:
                 print('Failed while saving')
-            try:
-                kafka.send_message(producer = producer, topic = TOPIC_OUTPUT_PAGES, value = content)
-            except Exception as ex:
-                print(ex)
-                print('Problem to sent message')
-
 
 # Function for starting the crawler, it takes several parameters for the settings
 def start_crawling(start_urls, allowed_domains,depth_limit,download_delay, closespider_pagecount, autothrottle_enable, autothrottle_target_concurrency):
@@ -100,7 +93,7 @@ def start_crawling(start_urls, allowed_domains,depth_limit,download_delay, close
              'domain': str(text_parser.extract_domain_from_url(url)),
              'spider_id': ID
          }
-         kafka.send_message(producer = producer, topic = TOPIC_OUTPUT_DOMAINS, value = content)
+         kafka.send_message(producer = producer, topic = TOPIC_OUTPUT, value = content)
 
     for crawler in process.crawlers:
         crawler.signals.connect(spider_ended, signal=scrapy.signals.spider_closed)

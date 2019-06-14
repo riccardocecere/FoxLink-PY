@@ -1,5 +1,10 @@
 import operator
 import ast
+import shingler
+from bs4 import BeautifulSoup
+import os
+
+SHINGLE_WINDOW = int(os.environ.get('SHINGLE_WINDOW'))
 
 # Function to generate structural clusterin on the given domain
 def structural_clustering(collection, threshold=0):
@@ -25,6 +30,9 @@ def structural_clustering(collection, threshold=0):
     # build the sample dictionary from the relative mongodb collection data
     for post in collection.find():
         try:
+            body = BeautifulSoup(post['html_raw_text'], 'html.parser')
+            shingle_vector = shingler.compute_shingle_vector(body, SHINGLE_WINDOW)
+            post['shingle_vector'] = str(shingle_vector)
             sample[post['url_page']] = (post['shingle_vector'], post['depth_level'],post['referring_url'])
         except:
             continue

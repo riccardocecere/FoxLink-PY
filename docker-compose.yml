@@ -36,9 +36,9 @@ services:
     external_links:
       - mongo
     volumes:
+      - ./classifier/src:/src
       - ./classifier/data:/data
       - ./classifier/model:/model
-      - ./classifier/src:/src
 
   crawler_1:
     build: ./crawler
@@ -48,8 +48,7 @@ services:
       KAFKA_BROKER_URL: 'kafka:9092'
       CONSUMER_GROUP: 'crawlers'
       TOPIC_INPUT: 'ClassifiedDomains'
-      TOPIC_OUTPUT_PAGES: 'ScrapedPages'
-      TOPIC_OUTPUT_DOMAINS: 'CrawledDomains'
+      TOPIC_OUTPUT: 'CrawledDomains'
       TIMEOUT_POLLING_MS: 10
       MAX_RECORD_POLLING: 5
       MESSAGES_PER_SECOND: 1000
@@ -75,8 +74,7 @@ services:
       KAFKA_BROKER_URL: 'kafka:9092'
       CONSUMER_GROUP: 'crawlers'
       TOPIC_INPUT: 'ClassifiedDomains'
-      TOPIC_OUTPUT_PAGES: 'ScrapedPages'
-      TOPIC_OUTPUT_DOMAINS: 'CrawledDomains'
+      TOPIC_OUTPUT: 'CrawledDomains'
       TIMEOUT_POLLING_MS: 10
       MAX_RECORD_POLLING: 5
       MESSAGES_PER_SECOND: 1000
@@ -102,8 +100,7 @@ services:
       KAFKA_BROKER_URL: 'kafka:9092'
       CONSUMER_GROUP: 'crawlers'
       TOPIC_INPUT: 'ClassifiedDomains'
-      TOPIC_OUTPUT_PAGES: 'ScrapedPages'
-      TOPIC_OUTPUT_DOMAINS: 'CrawledDomains'
+      TOPIC_OUTPUT: 'CrawledDomains'
       TIMEOUT_POLLING_MS: 10
       MAX_RECORD_POLLING: 5
       MESSAGES_PER_SECOND: 1000
@@ -129,8 +126,7 @@ services:
       KAFKA_BROKER_URL: 'kafka:9092'
       CONSUMER_GROUP: 'crawlers'
       TOPIC_INPUT: 'ClassifiedDomains'
-      TOPIC_OUTPUT_PAGES: 'ScrapedPages'
-      TOPIC_OUTPUT_DOMAINS: 'CrawledDomains'
+      TOPIC_OUTPUT: 'CrawledDomains'
       TIMEOUT_POLLING_MS: 10
       MAX_RECORD_POLLING: 5
       MESSAGES_PER_SECOND: 1000
@@ -156,8 +152,7 @@ services:
       KAFKA_BROKER_URL: 'kafka:9092'
       CONSUMER_GROUP: 'crawlers'
       TOPIC_INPUT: 'ClassifiedDomains'
-      TOPIC_OUTPUT_PAGES: 'ScrapedPages'
-      TOPIC_OUTPUT_DOMAINS: 'CrawledDomains'
+      TOPIC_OUTPUT: 'CrawledDomains'
       TIMEOUT_POLLING_MS: 10
       MAX_RECORD_POLLING: 5
       MESSAGES_PER_SECOND: 1000
@@ -183,8 +178,7 @@ services:
       KAFKA_BROKER_URL: 'kafka:9092'
       CONSUMER_GROUP: 'crawlers'
       TOPIC_INPUT: 'ClassifiedDomains'
-      TOPIC_OUTPUT_PAGES: 'ScrapedPages'
-      TOPIC_OUTPUT_DOMAINS: 'CrawledDomains'
+      TOPIC_OUTPUT: 'CrawledDomains'
       TIMEOUT_POLLING_MS: 10
       MAX_RECORD_POLLING: 5
       MESSAGES_PER_SECOND: 1000
@@ -210,8 +204,7 @@ services:
       KAFKA_BROKER_URL: 'kafka:9092'
       CONSUMER_GROUP: 'crawlers'
       TOPIC_INPUT: 'ClassifiedDomains'
-      TOPIC_OUTPUT_PAGES: 'ScrapedPages'
-      TOPIC_OUTPUT_DOMAINS: 'CrawledDomains'
+      TOPIC_OUTPUT: 'CrawledDomains'
       TIMEOUT_POLLING_MS: 10
       MAX_RECORD_POLLING: 5
       MESSAGES_PER_SECOND: 1000
@@ -237,8 +230,7 @@ services:
       KAFKA_BROKER_URL: 'kafka:9092'
       CONSUMER_GROUP: 'crawlers'
       TOPIC_INPUT: 'ClassifiedDomains'
-      TOPIC_OUTPUT_PAGES: 'ScrapedPages'
-      TOPIC_OUTPUT_DOMAINS: 'CrawledDomains'
+      TOPIC_OUTPUT: 'CrawledDomains'
       TIMEOUT_POLLING_MS: 10
       MAX_RECORD_POLLING: 5
       MESSAGES_PER_SECOND: 1000
@@ -264,8 +256,7 @@ services:
       KAFKA_BROKER_URL: 'kafka:9092'
       CONSUMER_GROUP: 'crawlers'
       TOPIC_INPUT: 'ClassifiedDomains'
-      TOPIC_OUTPUT_PAGES: 'ScrapedPages'
-      TOPIC_OUTPUT_DOMAINS: 'CrawledDomains'
+      TOPIC_OUTPUT: 'CrawledDomains'
       TIMEOUT_POLLING_MS: 10
       MAX_RECORD_POLLING: 5
       MESSAGES_PER_SECOND: 1000
@@ -291,8 +282,7 @@ services:
       KAFKA_BROKER_URL: 'kafka:9092'
       CONSUMER_GROUP: 'crawlers'
       TOPIC_INPUT: 'ClassifiedDomains'
-      TOPIC_OUTPUT_PAGES: 'ScrapedPages'
-      TOPIC_OUTPUT_DOMAINS: 'CrawledDomains'
+      TOPIC_OUTPUT: 'CrawledDomains'
       TIMEOUT_POLLING_MS: 10
       MAX_RECORD_POLLING: 1
       MESSAGES_PER_SECOND: 1000
@@ -310,39 +300,24 @@ services:
     external_links:
       - mongo
 
-  shingler:
-    build: ./shingler
-    container_name: 'shingler'
-    environment:
-      KAFKA_BROKER_URL: 'kafka:9092'
-      TOPIC_INPUT_PAGES: 'ScrapedPages'
-      TOPIC_INPUT_DOMAINS: 'CrawledDomains'
-      TOPIC_OUTPUT: 'ShingledDomains'
-      TIMEOUT_POLLING_MS: 10
-      MAX_RECORD_POLLING: 5
-      SHINGLE_WINDOW: 3
-      MONGODB_ADDRESS: "mongodb:27017"
-      DATABASE: 'ShingledDomainPages'
-    volumes:
-      - ./shingler/src:/src
-    external_links:
-      - mongo
-
   clusterizer:
     build: ./clusterizer
     container_name: 'clusterizer'
     environment:
       KAFKA_BROKER_URL: 'kafka:9092'
-      TOPIC_INPUT: 'ShingledDomains'
+      TOPIC_INPUT: 'CrawledDomains'
       TOPIC_OUTPUT: 'ClusterizedDomains'
       TIMEOUT_POLLING_MS: 10
       MAX_RECORD_POLLING: 5
       MIN_SIZE_CLUSTER: 0
       MONGODB_ADDRESS: "mongodb:27017"
-      DATABASE_READ: 'ShingledDomainPages'
+      DATABASE_READ: 'CrawledPages'
       DATABASE_WRITE: 'ClusterizedDomains'
+      SHINGLE_WINDOW: 3
     volumes:
       - ./clusterizer/src:/src
+      - ./clusterizer/src/shingler:/shingler/shingler
+
 
   linkage_analyzer:
     build: ./linkage_analyzer
