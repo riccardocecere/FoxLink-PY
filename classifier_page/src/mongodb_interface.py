@@ -26,13 +26,6 @@ def get_collection(collection):
     except:
         return None
 
-def get_collection_from_db(database,collection):
-    try:
-        db = get_db(database)
-        return db[collection]
-    except:
-        return None
-
 # Update a document
 def update_document(collection, id_name, id, attribute_name, content):
     try:

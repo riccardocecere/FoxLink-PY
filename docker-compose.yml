@@ -18,9 +18,9 @@ services:
       - ./web_discovery/data:/data
       - ./web_discovery/src:/src
 
-  classifier:
-    build: ./classifier
-    container_name: 'classifier'
+  domain_classifier:
+    build: classifier_domain
+    container_name: 'classifier_domain'
     environment:
       KAFKA_BROKER_URL: 'kafka:9092'
       TOPIC_INPUT: 'DiscoveredDomains'
@@ -30,15 +30,15 @@ services:
       MESSAGES_PER_SECOND: 1000
       TRAINING_SET: './data/training_set.csv'
       TRAINING_PARQUET: './data/training_set.snappy.parquet'
-      MODEL: './model/classifier.sav'
+      MODEL: './model/classifier_domain.sav'
       MONGODB_ADDRESS: "mongodb:27017"
       DATABASE: 'ClassifiedDomains'
     external_links:
       - mongo
     volumes:
-      - ./classifier/src:/src
-      - ./classifier/data:/data
-      - ./classifier/model:/model
+      - ./classifier_domain/src:/src
+      - ./classifier_domain/data:/data
+      - ./classifier_domain/model:/model
 
   crawler_1:
     build: ./crawler
@@ -170,136 +170,6 @@ services:
     external_links:
       - mongo
 
-  crawler_6:
-    build: ./crawler
-    container_name: 'crawler-6'
-    environment:
-      ID: '6'
-      KAFKA_BROKER_URL: 'kafka:9092'
-      CONSUMER_GROUP: 'crawlers'
-      TOPIC_INPUT: 'ClassifiedDomains'
-      TOPIC_OUTPUT: 'CrawledDomains'
-      TIMEOUT_POLLING_MS: 10
-      MAX_RECORD_POLLING: 5
-      MESSAGES_PER_SECOND: 1000
-      DEPTH_LIMIT: 8
-      DOWLOAND_DELAY: 0.3
-      CLOSESPIDER_PAGECOUNT: 25
-      AUTOTHROTTLE_ENABLE: 'true'
-      AUTOTHROTTLE_TARGET_CONCURRENCY: 10
-      TIMEOUT_CRAWLER: 180
-      TIMEOUT_DOWNLOAD: '5'
-      MONGODB_ADDRESS: "mongodb:27017"
-      DATABASE: 'CrawledPages'
-    volumes:
-      - ./crawler/src:/src
-    external_links:
-      - mongo
-
-  crawler_7:
-    build: ./crawler
-    container_name: 'crawler-7'
-    environment:
-      ID: '7'
-      KAFKA_BROKER_URL: 'kafka:9092'
-      CONSUMER_GROUP: 'crawlers'
-      TOPIC_INPUT: 'ClassifiedDomains'
-      TOPIC_OUTPUT: 'CrawledDomains'
-      TIMEOUT_POLLING_MS: 10
-      MAX_RECORD_POLLING: 5
-      MESSAGES_PER_SECOND: 1000
-      DEPTH_LIMIT: 8
-      DOWLOAND_DELAY: 0.3
-      CLOSESPIDER_PAGECOUNT: 25
-      AUTOTHROTTLE_ENABLE: 'true'
-      AUTOTHROTTLE_TARGET_CONCURRENCY: 10
-      TIMEOUT_CRAWLER: 180
-      TIMEOUT_DOWNLOAD: '5'
-      MONGODB_ADDRESS: "mongodb:27017"
-      DATABASE: 'CrawledPages'
-    volumes:
-      - ./crawler/src:/src
-    external_links:
-      - mongo
-
-  crawler_8:
-    build: ./crawler
-    container_name: 'crawler-8'
-    environment:
-      ID: '8'
-      KAFKA_BROKER_URL: 'kafka:9092'
-      CONSUMER_GROUP: 'crawlers'
-      TOPIC_INPUT: 'ClassifiedDomains'
-      TOPIC_OUTPUT: 'CrawledDomains'
-      TIMEOUT_POLLING_MS: 10
-      MAX_RECORD_POLLING: 5
-      MESSAGES_PER_SECOND: 1000
-      DEPTH_LIMIT: 8
-      DOWLOAND_DELAY: 0.3
-      CLOSESPIDER_PAGECOUNT: 25
-      AUTOTHROTTLE_ENABLE: 'true'
-      AUTOTHROTTLE_TARGET_CONCURRENCY: 10
-      TIMEOUT_CRAWLER: 180
-      TIMEOUT_DOWNLOAD: '5'
-      MONGODB_ADDRESS: "mongodb:27017"
-      DATABASE: 'CrawledPages'
-    volumes:
-      - ./crawler/src:/src
-    external_links:
-      - mongo
-
-  crawler_9:
-    build: ./crawler
-    container_name: 'crawler-9'
-    environment:
-      ID: '9'
-      KAFKA_BROKER_URL: 'kafka:9092'
-      CONSUMER_GROUP: 'crawlers'
-      TOPIC_INPUT: 'ClassifiedDomains'
-      TOPIC_OUTPUT: 'CrawledDomains'
-      TIMEOUT_POLLING_MS: 10
-      MAX_RECORD_POLLING: 5
-      MESSAGES_PER_SECOND: 1000
-      DEPTH_LIMIT: 8
-      DOWLOAND_DELAY: 0.3
-      CLOSESPIDER_PAGECOUNT: 25
-      AUTOTHROTTLE_ENABLE: 'true'
-      AUTOTHROTTLE_TARGET_CONCURRENCY: 10
-      TIMEOUT_CRAWLER: 180
-      TIMEOUT_DOWNLOAD: '5'
-      MONGODB_ADDRESS: "mongodb:27017"
-      DATABASE: 'CrawledPages'
-    volumes:
-      - ./crawler/src:/src
-    external_links:
-      - mongo
-
-  crawler_10:
-    build: ./crawler
-    container_name: 'crawler-10'
-    environment:
-      ID: '10'
-      KAFKA_BROKER_URL: 'kafka:9092'
-      CONSUMER_GROUP: 'crawlers'
-      TOPIC_INPUT: 'ClassifiedDomains'
-      TOPIC_OUTPUT: 'CrawledDomains'
-      TIMEOUT_POLLING_MS: 10
-      MAX_RECORD_POLLING: 5
-      MESSAGES_PER_SECOND: 1000
-      DEPTH_LIMIT: 8
-      DOWLOAND_DELAY: 0.3
-      CLOSESPIDER_PAGECOUNT: 25
-      AUTOTHROTTLE_ENABLE: 'true'
-      AUTOTHROTTLE_TARGET_CONCURRENCY: 10
-      TIMEOUT_CRAWLER: 180
-      TIMEOUT_DOWNLOAD: '5'
-      MONGODB_ADDRESS: "mongodb:27017"
-      DATABASE: 'CrawledPages'
-    volumes:
-      - ./crawler/src:/src
-    external_links:
-      - mongo
-
   clusterizer:
     build: ./clusterizer
     container_name: 'clusterizer'
@@ -309,7 +179,7 @@ services:
       TOPIC_OUTPUT: 'ClusterizedDomains'
       TIMEOUT_POLLING_MS: 10
       MAX_RECORD_POLLING: 5
-      MIN_SIZE_CLUSTER: 0
+      MIN_SIZE_CLUSTER: 20
       MONGODB_ADDRESS: "mongodb:27017"
       DATABASE_READ: 'CrawledPages'
       DATABASE_WRITE: 'ClusterizedDomains'
@@ -324,11 +194,36 @@ services:
     environment:
       KAFKA_BROKER_URL: 'kafka:9092'
       TOPIC_INPUT: 'ClusterizedDomains'
+      TOPIC_OUTPUT: 'ProductClusters'
       TIMEOUT_POLLING_MS: 10
       MAX_RECORD_POLLING: 5
-      DATABASE: 'TaggedDomainClusters'
+      MONGODB_ADDRESS: "mongodb:27017"
+      DATABASE: 'LabeledDomainClusters'
     volumes:
       - ./linkage_analyzer/src:/src
+
+  page_classifier:
+    build: classifier_page
+    container_name: 'classifier_page'
+    environment:
+      KAFKA_BROKER_URL: 'kafka:9092'
+      TOPIC_INPUT: 'ProductClusters'
+      TOPIC_OUTPUT: 'ClassifiedProducts'
+      TIMEOUT_POLLING_MS: 10
+      MAX_RECORD_POLLING: 5
+      MESSAGES_PER_SECOND: 1000
+      TRAINING_SET: './data/training_set.csv'
+      TRAINING_PARQUET: './data/training_set.snappy.parquet'
+      MODEL: './model/classifier_page.sav'
+      MONGODB_ADDRESS: "mongodb:27017"
+      DATABASE: 'ClassifiedProducts'
+    external_links:
+      - mongo
+    volumes:
+      - ./classifier_page/src:/src
+      - ./classifier_page/data:/data
+      - ./classifier_page/model:/model
+
 
 networks:
   default:

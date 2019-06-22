@@ -37,7 +37,7 @@ def load_classifier(model, parquet, training_set):
         #Encoding of the 'category' column to a new column 'label'
         le = LabelEncoder()
         dataset['label']=le.fit_transform(dataset['category'])
-        #Pipeline composed by tokenizer, tfidf analizer and classifier
+        #Pipeline composed by tokenizer, tfidf analizer and classifier_domain
         nb = Pipeline([('vect', CountVectorizer()),
                        ('tfidf', TfidfTransformer()),
                        ('clf', MultinomialNB()),
@@ -54,7 +54,7 @@ def load_classifier(model, parquet, training_set):
         #Save the model to path 'filename'
         pickle.dump(nb, open(model, 'wb'))
     #Load the model
-    filename = '/model/classifier.sav'
+    filename = '/model/classifier_domain.sav'
     loaded_model = pickle.load(open(model, 'rb'))
 
     return loaded_model

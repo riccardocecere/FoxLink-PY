@@ -38,7 +38,7 @@ if __name__ == '__main__':
                             print('########ERROR tryng to cluster###########')
                             print('#########################################')
                         content = {'domain': collection_name,
-                                   'clusters': str(clusters)}
+                                   'clusters': clusters}
                         content_json = json.dumps(content)
                         mongo.put(collection_name, content_json)
                         print('#########################################')
