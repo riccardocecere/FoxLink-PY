@@ -49,11 +49,7 @@ def main():
                     foxlink_crawler.intrasite_crawling_iterative(urls,depth_limit,download_delay,
                                                       closespider_pagecount,autothrottle_enable,
                                                       autothrottle_target_concurrency)
-                    # for url in urls:
-                    #     content = {
-                    #         'domain': str(url)
-                    #     }
-                    #     kafka.send_message(producer = producer, topic = TOPIC_OUTPUT_DOMAINS, value = content)
+
                 except Exception as ex:
                     print(ex)
 

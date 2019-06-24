@@ -24,15 +24,15 @@ if __name__ == '__main__':
                     clusters = message.value['clusters']
                     labeled_domain = linkage_analysis.calculate_all_cluster_labels(clusters)
                     print('#######Clusters Tagged########')
-                    content = {
-                        'domain': domain,
-                        'TaggedClusters': labeled_domain
-                    }
-                    content_json = json.dumps(content)
-                    kafka.send_message(producer=producer, topic=TOPIC_OUTPUT, value=content)
-                    try:
-                        mongo.put(domain, content_json)
-                        print('Data saved on DB')
-                    except Exception as ex:
-                        print('Failed while saving')
-        #print('passo')
+                    if labeled_domain:
+                        content = {
+                            'domain': domain,
+                            'TaggedClusters': labeled_domain
+                        }
+                        content_json = json.dumps(content)
+                        kafka.send_message(producer=producer, topic=TOPIC_OUTPUT, value=content)
+                        try:
+                            mongo.put(domain, content_json)
+                            print('Data saved on DB')
+                        except Exception as ex:
+                            print('Failed while saving')

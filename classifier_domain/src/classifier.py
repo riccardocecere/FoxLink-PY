@@ -24,7 +24,7 @@ def load_classifier(model, parquet, training_set):
         #Check if the train parquet already exists
         exists_parquet = os.path.isfile(parquet)
         if not exists_parquet:
-            print('Creazioe del parquet')
+            print('Creazione del parquet')
             #Load train CSV
             dataframe = read_csv(training_set, sep=';', names=['domain','category'])
             #Convert CSV to dataframe

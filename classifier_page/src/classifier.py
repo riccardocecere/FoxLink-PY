@@ -19,18 +19,21 @@ def load_classifier(model, parquet, training_set):
     #Check if the model already exists
     import os
     exists = os.path.isfile(model)
+    print('model: '+str(exists))
     if not exists:
         print('Addestramento del modello....')
         #Check if the train parquet already exists
         exists_parquet = os.path.isfile(parquet)
+        print('parquet: '+str(exists_parquet))
         if not exists_parquet:
-            print('Creazioe del parquet')
+            print('Creazione del parquet')
             #Load train CSV
             dataframe = read_csv(training_set, sep=';', names=['domain','category'])
             #Convert CSV to dataframe
             prepare_training_set(dataset = dataframe)
             #Convert Dataframe to parquet and save to path 'parquet_name'
             dataframe.to_parquet(parquet, engine='auto', compression='snappy')
+
         #load train parquet
         dataset = read_parquet(parquet)
 
@@ -53,6 +56,7 @@ def load_classifier(model, parquet, training_set):
         print('salvo il modello')
         #Save the model to path 'filename'
         pickle.dump(nb, open(model, 'wb'))
+
     #Load the model
     filename = '/model/classifier_domain.sav'
     loaded_model = pickle.load(open(model, 'rb'))

@@ -37,16 +37,16 @@ if __name__ == '__main__':
                             print('#########################################')
                             print('########ERROR tryng to cluster###########')
                             print('#########################################')
-                        content = {'domain': collection_name,
-                                   'clusters': clusters}
-                        content_json = json.dumps(content)
-                        mongo.put(collection_name, content_json)
-                        print('#########################################')
-                        print('############Data saved on DB#############')
-                        print('#########################################')
-                        kafka.send_message(producer = producer, topic=TOPIC_OUTPUT, value = content)
-                        print('Sent message: '+str(content))
+                        if clusters:
+                            content = {'domain': collection_name,
+                                       'clusters': clusters}
+                            content_json = json.dumps(content)
+                            mongo.put(collection_name, content_json)
+                            print('#########################################')
+                            print('############Data saved on DB#############')
+                            print('#########################################')
+                            kafka.send_message(producer = producer, topic=TOPIC_OUTPUT, value = content)
+                            print('Sent message for domain: '+str(content['domain']))
                     except:
                         print('#############ERROR clusterizer ##############')
 
-        #print('passo')

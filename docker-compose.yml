@@ -216,7 +216,8 @@ services:
       TRAINING_PARQUET: './data/training_set.snappy.parquet'
       MODEL: './model/classifier_page.sav'
       MONGODB_ADDRESS: "mongodb:27017"
-      DATABASE: 'ClassifiedProducts'
+      DATABASE_WRITE: 'ClassifiedProducts'
+      DATABASE_READ: 'CrawledPages'
     external_links:
       - mongo
     volumes:
@@ -224,6 +225,19 @@ services:
       - ./classifier_page/data:/data
       - ./classifier_page/model:/model
 
+  xpath_finder:
+    build: xpath_finder
+    container_name: xpath_finder
+    environment:
+      KAFKA_BROKER_URL: 'kafka:9092'
+      TOPIC_INPUT: 'ClassifiedProducts'
+      TOPIC_OUTPUT: 'Xpaths'
+      TIMEOUT_POLLING_MS: 10
+      MAX_RECORD_POLLING: 5
+      MONGODB_ADDRESS: "mongodb:27017"
+      DATABASE: 'DomainXpaths'
+    volumes:
+      - ./xpath_finder/src:/src
 
 networks:
   default:

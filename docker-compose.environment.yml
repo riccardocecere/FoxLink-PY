@@ -37,7 +37,9 @@ services:
                             ClassifiedDomains:5:1,
                             CrawledDomains:1:1,
                             ClusterizedDomains:1:1,
-                            ProductClusters:1:1"
+                            ProductClusters:1:1,
+                            ClassifiedProducts:1:1,
+                            Xpaths:1:1"
 
 networks:
   default:
