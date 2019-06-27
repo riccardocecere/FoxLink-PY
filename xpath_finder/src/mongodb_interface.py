@@ -3,7 +3,13 @@ from pymongo import MongoClient
 
 # Function to access the given db
 def get_db():
-    database = os.environ.get('DATABASE')
+    database = os.environ.get('DATABASE_WRITE')
+    mongodb_address = os.environ.get('MONGODB_ADDRESS')
+    client = MongoClient(mongodb_address)
+    db = client[database]
+    return db
+
+def get_db_from_name(database):
     mongodb_address = os.environ.get('MONGODB_ADDRESS')
     client = MongoClient(mongodb_address)
     db = client[database]
@@ -53,17 +59,19 @@ def get_all_collections():
 
 # It returns the html_raw_text of a given page
 def get_html_page(collection, url):
+    DATABASE_READ = os.environ.get('DATABASE_READ')
     try:
-        db = get_db()
+        db = get_db_from_name(DATABASE_READ)
         page = db[collection].find_one({"url_page":str(url)},{"html_raw_text":1})
         return page['html_raw_text']
-    except:
+    except Exception as ex:
         return None
 
 # Get all the referring url of a given page
 def get_referring_url(collection, url):
+    DATABASE_READ = os.environ.get('DATABASE_READ')
     try:
-        db = get_db()
+        db = get_db_from_name(DATABASE_READ)
         page = db[collection].find_one({"url_page":str(url)},{"referring_url":1})
         return page['referring_url']
     except:
@@ -71,8 +79,9 @@ def get_referring_url(collection, url):
 
 # Get depth level of a given page
 def get_depth_level(collection, url):
+    DATABASE_READ = os.environ.get('DATABASE_READ')
     try:
-        db = get_db()
+        db = get_db_from_name(DATABASE_READ)
         page = db[collection].find_one({"url_page":str(url)},{"depth_level":1})
         return page['depth_level']
     except:

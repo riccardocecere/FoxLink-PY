@@ -33,6 +33,7 @@ services:
       MODEL: './model/classifier_domain.sav'
       MONGODB_ADDRESS: "mongodb:27017"
       DATABASE: 'ClassifiedDomains'
+    restart: unless-stopped
     external_links:
       - mongo
     volumes:
@@ -54,13 +55,14 @@ services:
       MESSAGES_PER_SECOND: 1000
       DEPTH_LIMIT: 8
       DOWLOAND_DELAY: 0.3
-      CLOSESPIDER_PAGECOUNT: 25
+      CLOSESPIDER_PAGECOUNT: 100
       AUTOTHROTTLE_ENABLE: 'true'
       AUTOTHROTTLE_TARGET_CONCURRENCY: 10
       TIMEOUT_CRAWLER: 180
       TIMEOUT_DOWNLOAD: '5'
       MONGODB_ADDRESS: "mongodb:27017"
       DATABASE: 'CrawledPages'
+    restart: unless-stopped
     volumes:
       - ./crawler/src:/src
     external_links:
@@ -80,13 +82,14 @@ services:
       MESSAGES_PER_SECOND: 1000
       DEPTH_LIMIT: 8
       DOWLOAND_DELAY: 0.3
-      CLOSESPIDER_PAGECOUNT: 25
+      CLOSESPIDER_PAGECOUNT: 100
       AUTOTHROTTLE_ENABLE: 'true'
       AUTOTHROTTLE_TARGET_CONCURRENCY: 10
       TIMEOUT_CRAWLER: 180
       TIMEOUT_DOWNLOAD: '5'
       MONGODB_ADDRESS: "mongodb:27017"
       DATABASE: 'CrawledPages'
+    restart: unless-stopped
     volumes:
       - ./crawler/src:/src
     external_links:
@@ -106,13 +109,14 @@ services:
       MESSAGES_PER_SECOND: 1000
       DEPTH_LIMIT: 8
       DOWLOAND_DELAY: 0.3
-      CLOSESPIDER_PAGECOUNT: 25
+      CLOSESPIDER_PAGECOUNT: 100
       AUTOTHROTTLE_ENABLE: 'true'
       AUTOTHROTTLE_TARGET_CONCURRENCY: 10
       TIMEOUT_CRAWLER: 180
       TIMEOUT_DOWNLOAD: '5'
       MONGODB_ADDRESS: "mongodb:27017"
       DATABASE: 'CrawledPages'
+    restart: unless-stopped
     volumes:
       - ./crawler/src:/src
     external_links:
@@ -132,13 +136,13 @@ services:
       MESSAGES_PER_SECOND: 1000
       DEPTH_LIMIT: 8
       DOWLOAND_DELAY: 0.3
-      CLOSESPIDER_PAGECOUNT: 25
       AUTOTHROTTLE_ENABLE: 'true'
       AUTOTHROTTLE_TARGET_CONCURRENCY: 10
       TIMEOUT_CRAWLER: 180
       TIMEOUT_DOWNLOAD: '5'
       MONGODB_ADDRESS: "mongodb:27017"
       DATABASE: 'CrawledPages'
+    restart: unless-stopped
     volumes:
       - ./crawler/src:/src
     external_links:
@@ -158,13 +162,14 @@ services:
       MESSAGES_PER_SECOND: 1000
       DEPTH_LIMIT: 8
       DOWLOAND_DELAY: 0.3
-      CLOSESPIDER_PAGECOUNT: 25
+      CLOSESPIDER_PAGECOUNT: 100
       AUTOTHROTTLE_ENABLE: 'true'
       AUTOTHROTTLE_TARGET_CONCURRENCY: 10
       TIMEOUT_CRAWLER: 180
       TIMEOUT_DOWNLOAD: '5'
       MONGODB_ADDRESS: "mongodb:27017"
       DATABASE: 'CrawledPages'
+    restart: unless-stopped
     volumes:
       - ./crawler/src:/src
     external_links:
@@ -179,11 +184,15 @@ services:
       TOPIC_OUTPUT: 'ClusterizedDomains'
       TIMEOUT_POLLING_MS: 10
       MAX_RECORD_POLLING: 5
+      MESSAGES_PER_SECOND: 1000
       MIN_SIZE_CLUSTER: 20
       MONGODB_ADDRESS: "mongodb:27017"
       DATABASE_READ: 'CrawledPages'
       DATABASE_WRITE: 'ClusterizedDomains'
       SHINGLE_WINDOW: 3
+    restart: unless-stopped
+    external_links:
+      - mongo
     volumes:
       - ./clusterizer/src:/src
       - ./clusterizer/src/shingler:/shingler/shingler
@@ -197,8 +206,12 @@ services:
       TOPIC_OUTPUT: 'ProductClusters'
       TIMEOUT_POLLING_MS: 10
       MAX_RECORD_POLLING: 5
+      MESSAGES_PER_SECOND: 1000
       MONGODB_ADDRESS: "mongodb:27017"
       DATABASE: 'LabeledDomainClusters'
+    restart: unless-stopped
+    external_links:
+      - mongo
     volumes:
       - ./linkage_analyzer/src:/src
 
@@ -218,6 +231,7 @@ services:
       MONGODB_ADDRESS: "mongodb:27017"
       DATABASE_WRITE: 'ClassifiedProducts'
       DATABASE_READ: 'CrawledPages'
+    restart: unless-stopped
     external_links:
       - mongo
     volumes:
@@ -231,11 +245,15 @@ services:
     environment:
       KAFKA_BROKER_URL: 'kafka:9092'
       TOPIC_INPUT: 'ClassifiedProducts'
-      TOPIC_OUTPUT: 'Xpaths'
       TIMEOUT_POLLING_MS: 10
       MAX_RECORD_POLLING: 5
+      MESSAGES_PER_SECOND: 1000
       MONGODB_ADDRESS: "mongodb:27017"
-      DATABASE: 'DomainXpaths'
+      DATABASE_WRITE: 'DomainXpaths'
+      DATABASE_READ: 'CrawledPages'
+    restart: unless-stopped
+    external_links:
+      - mongo
     volumes:
       - ./xpath_finder/src:/src
 

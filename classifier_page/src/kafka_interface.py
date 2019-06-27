@@ -73,7 +73,7 @@ def send_message(producer, topic, message):
         future = producer.send(topic, value = message)
         result = future.get(timeout=60)
         print('Message sent successfully')
-        print("Message sent: " + str(message))
+        #print("Message sent: " + str(message))
     except Exception as ex:
         print('Exception in publishing message')
         print(str(ex))
