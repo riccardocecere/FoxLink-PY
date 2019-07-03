@@ -22,19 +22,15 @@ if __name__ == '__main__':
                     print('Working for domain: '+domain)
                     list_pages = link_parser.check_urls(message.value['filtered_pages'])
 
-                    for dict in list_pages:
-                        print('url3: ' +str(dict['referring_url']))
                     xpaths = xpath.find_xpath(domain, list_pages)
 
-                    if xpaths:
-                        print('Xpaths elaborated')
-                        xpath_generalized = xpath.generalize_xpath(xpaths)
-                        if xpath_generalized:
-                            print('Generated Xpath Generalized')
+                    print('Xpaths elaborated')
+                    xpath_generalized = xpath.generalize_xpath(xpaths)
+                    print('Generated Xpath Generalized')
 
-                            content = {
-                                'domain': domain,
-                                'Xpaths': xpaths,
-                                'Generalized_Xpaths': xpath_generalized
-                            }
-                            mongo.put(domain,json.dumps(content))
+                    content = {
+                        'domain': domain,
+                        'Xpaths': xpaths,
+                        'Generalized_Xpaths': xpath_generalized
+                    }
+                    mongo.put(domain,json.dumps(content))

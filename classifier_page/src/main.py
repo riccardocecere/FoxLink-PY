@@ -47,8 +47,8 @@ def main():
                         if label == 'product':
                             page_text = page_dict['text']
                             prediction = classifier.predict(model=model, input=page_text)
-                            #if prediction == [1]:
-                            filtered_list.append(page_dict)
+                            if prediction == [1]:
+                                filtered_list.append(page_dict)
                         else:
                             filtered_list.append(page_dict)
                     content = {

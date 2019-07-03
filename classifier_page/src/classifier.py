@@ -58,9 +58,7 @@ def load_classifier(model, parquet, training_set):
         pickle.dump(nb, open(model, 'wb'))
 
     #Load the model
-    filename = '/model/classifier_domain.sav'
     loaded_model = pickle.load(open(model, 'rb'))
-
     return loaded_model
 
 '''method that return the prediction value of the input given'''
