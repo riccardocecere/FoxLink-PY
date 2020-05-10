@@ -1,5 +1,4 @@
 from kafka import KafkaConsumer, KafkaProducer
-from time import sleep
 import json
 import os
 
@@ -29,7 +28,8 @@ def connectProducer(server):
         producer = KafkaProducer(
             bootstrap_servers=server,
             # Encode all values as JSON
-            value_serializer=lambda value: json.dumps(value).encode('utf-8'))
+            value_serializer=lambda value: json.dumps(value).
+                                            encode('utf-8'))
         return producer
     except Exception as ex:
         print('Exception while connecting Kafka broker')
@@ -39,7 +39,8 @@ def consume(consumer):
     # Consume messages
     messages_dict = {}
     try:
-        messages_dict = consumer.poll(timeout_ms=TIMEOUT_POLLING, max_records=MAX_RECORD_POLLING)
+        messages_dict = consumer.poll(timeout_ms=TIMEOUT_POLLING,
+                                      max_records=MAX_RECORD_POLLING)
     except Exception as ex:
         print('Exception while polling from Kafka broker')
         print(str(ex))

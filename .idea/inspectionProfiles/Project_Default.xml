@@ -7,6 +7,7 @@
           <option value="web_discovery_searx" />
           <option value="searx" />
           <option value="middleware_config" />
+          <option value="mongodb_interface" />
         </list>
       </option>
     </inspection_tool>
